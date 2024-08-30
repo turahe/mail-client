@@ -1,0 +1,11 @@
+{
+    "name": "MailClient",
+    "alias": "mailclient",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\MailClient\\Providers\\MailClientServiceProvider"
+    ],
+    "files": []
+}

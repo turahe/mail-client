@@ -1,0 +1,36 @@
+{
+    "name": "turahe/mailclient",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nur Wachid",
+            "email": "wachid@outlook.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "ddeboer/imap": "^1.19",
+        "google/apiclient": "^2.15.0",
+        "microsoft/microsoft-graph": "^2.12"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\MailClient\\": "app/",
+            "Modules\\MailClient\\Database\\Factories\\": "database/factories/",
+            "Modules\\MailClient\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\MailClient\\Tests\\": "tests/"
+        }
+    }
+}
