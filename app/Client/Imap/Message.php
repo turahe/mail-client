@@ -3,11 +3,15 @@
 namespace Modules\MailClient\Client\Imap;
 
 use Illuminate\Support\Carbon;
-use Modules\Core\Common\Mail\Headers\AddressHeader;
-use Modules\Core\Common\Mail\Headers\HeadersCollection;
+//use Turahe\Core\Common\Mail\Headers\AddressHeader;
+//use Turahe\Core\Common\Mail\Headers\HeadersCollection;
 use Modules\MailClient\Client\AbstractMessage;
 use Modules\MailClient\Client\FolderIdentifier;
+use Turahe\Core\Mail\Headers\AddressHeader;
+use Turahe\Core\Mail\Headers\HeadersCollection;
 use ZBateson\MailMimeParser\MailMimeParser;
+
+//use ZBateson\MailMimeParser\MailMimeParser;
 
 class Message extends AbstractMessage
 {
@@ -101,7 +105,7 @@ class Message extends AbstractMessage
     }
 
     /**
-     * Get the messsage attachments
+     * Get the message attachments
      *
      * @return \Illuminate\Support\Collection
      */
@@ -113,7 +117,7 @@ class Message extends AbstractMessage
     /**
      * Get message from
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getFrom()
     {
@@ -129,7 +133,7 @@ class Message extends AbstractMessage
     /**
      * Get message to
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getTo()
     {
@@ -139,7 +143,7 @@ class Message extends AbstractMessage
     /**
      * Get message CC
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getCc()
     {
@@ -149,7 +153,7 @@ class Message extends AbstractMessage
     /**
      * Get message bcc
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getBcc()
     {
@@ -159,7 +163,7 @@ class Message extends AbstractMessage
     /**
      * Get message reply to
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getReplyTo()
     {
@@ -169,13 +173,13 @@ class Message extends AbstractMessage
     /**
      * Get message sender
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getSender()
     {
         $sender = $this->getEntity()->getSender();
 
-        // The ddeboer library thinks that multiple senders
+        // The deburr library thinks that multiple senders
         // may exists
         if (count($sender) > 0) {
             return new AddressHeader('sender', $sender[0]->getAddress(), $sender[0]->getName());
@@ -327,7 +331,7 @@ class Message extends AbstractMessage
      *
      * @param  string  $type
      * @param  array  $addresses
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     protected function parseAddresses($type, $addresses)
     {

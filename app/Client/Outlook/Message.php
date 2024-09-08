@@ -5,15 +5,15 @@ namespace Modules\MailClient\Client\Outlook;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use Microsoft\Graph\Model\BodyType;
-use Microsoft\Graph\Model\FileAttachment;
-use Microsoft\Graph\Model\Message as MessageModel;
-use Modules\Core\Common\Mail\Headers\AddressHeader;
-use Modules\Core\Common\Mail\Headers\HeadersCollection;
-use Modules\Core\Facades\MsGraph as Api;
+use Microsoft\Graph\Generated\Models\Message as MessageModel;
+use Microsoft\Graph\Generated\Models\BodyType;
+use Microsoft\Graph\Generated\Models\FileAttachment;
+use Turahe\Core\Facades\MsGraph as Api;
 use Modules\MailClient\Client\AbstractMessage;
 use Modules\MailClient\Client\Exceptions\ConnectionErrorException;
 use Modules\MailClient\Client\FolderIdentifier;
+use Turahe\Core\Mail\Headers\AddressHeader;
+use Turahe\Core\Mail\Headers\HeadersCollection;
 
 class Message extends AbstractMessage
 {
@@ -122,7 +122,7 @@ class Message extends AbstractMessage
     /**
      * Get message FROM
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getFrom()
     {
@@ -172,7 +172,7 @@ class Message extends AbstractMessage
     /**
      * Get message Reply-to
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader
      */
     public function getReplyTo()
     {
@@ -244,7 +244,7 @@ class Message extends AbstractMessage
     /**
      * Get message Sender
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return AddressHeader|null
      */
     public function getSender()
     {
@@ -268,7 +268,7 @@ class Message extends AbstractMessage
      */
     public function isRead()
     {
-        return $this->getEntity()->getIsRead() ? true : false;
+        return (bool)$this->getEntity()->getIsRead();
     }
 
     /**
@@ -278,7 +278,7 @@ class Message extends AbstractMessage
      */
     public function isDraft()
     {
-        return $this->getEntity()->getIsDraft() ? true : false;
+        return (bool)$this->getEntity()->getIsDraft();
     }
 
     /**
@@ -310,7 +310,7 @@ class Message extends AbstractMessage
     public function markAsUnread()
     {
         try {
-            $message = new MessageModel;
+            $message = new \Microsoft\Graph\Generated\Models\Message();
             $message->setIsRead(false);
 
             Api::createPatchRequest("/me/messages/{$this->getId()}", $message)->execute();

@@ -4,9 +4,10 @@ namespace Modules\MailClient\Client\Outlook;
 
 use GuzzleHttp\Exception\ClientException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use Microsoft\Graph\Model\MailFolder;
-use Microsoft\Graph\Model\Message as MessageModel;
-use Modules\Core\Facades\MsGraph as Api;
+//use Microsoft\Graph\Model\MailFolder;
+use Microsoft\Graph\Generated\Models\MailFolder;
+use Microsoft\Graph\Generated\Models\Message as MessageModel;
+use Turahe\Core\Facades\MsGraph as Api;
 use Modules\MailClient\Client\AbstractFolder;
 use Modules\MailClient\Client\Exceptions\ConnectionErrorException;
 use Modules\MailClient\Client\Exceptions\MessageNotFoundException;
@@ -147,7 +148,7 @@ class Folder extends AbstractFolder
     /**
      * Get folder children.
      *
-     * @return array
+     * @return array|\Modules\MailClient\Client\FolderCollection
      *
      * @throws \Modules\MailClient\Client\Exceptions\ConnectionErrorException
      */

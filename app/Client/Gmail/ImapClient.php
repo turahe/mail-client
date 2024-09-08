@@ -4,8 +4,7 @@ namespace Modules\MailClient\Client\Gmail;
 
 use Google\Service\Exception as GoogleServiceException;
 use Illuminate\Support\Str;
-use Modules\Core\Common\OAuth\AccessTokenProvider;
-use Modules\Core\Facades\Google as Client;
+use Turahe\Core\Facades\Google as Client;
 use Modules\MailClient\Client\AbstractImapClient;
 use Modules\MailClient\Client\Contracts\FolderInterface;
 use Modules\MailClient\Client\Contracts\MessageInterface;
@@ -17,6 +16,7 @@ use Modules\MailClient\Client\Exceptions\ServiceUnavailableException;
 use Modules\MailClient\Client\Exceptions\UnauthorizedException;
 use Modules\MailClient\Client\FolderCollection;
 use Modules\MailClient\Client\FolderIdentifier;
+use Turahe\Core\OAuth\AccessTokenProvider;
 
 class ImapClient extends AbstractImapClient
 {

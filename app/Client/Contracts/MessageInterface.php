@@ -2,8 +2,6 @@
 
 namespace Modules\MailClient\Client\Contracts;
 
-use Closure;
-
 interface MessageInterface
 {
     /**
@@ -16,7 +14,7 @@ interface MessageInterface
     /**
      * Get the message internet id
      *
-     * It happens very raraly, but some messages does not have the x-message-id header and this  method may return null
+     * It happens very rarely, but some messages does not have the x-message-id header and this  method may return null
      *
      * @return string|null
      */
@@ -53,13 +51,13 @@ interface MessageInterface
     /**
      * Get the message body for preview
      *
-     * @param  \Closure  $replacer  Provide a replace callback
+     * @param \Closure|null $replacer Provide a replace callback
      * @return string|null
      */
-    public function getPreviewBody(?Closure $replacer = null);
+    public function getPreviewBody(?\Closure $replacer = null);
 
     /**
-     * Get the messsage attachments
+     * Get the message attachments
      *
      * @return \Illuminate\Support\Collection
      */
@@ -68,42 +66,42 @@ interface MessageInterface
     /**
      * Get message FROM header
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return \Turahe\Core\Mail\Headers\AddressHeader|null
      */
     public function getFrom();
 
     /**
      * Get message TO header
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return \Turahe\Core\Mail\Headers\AddressHeader|null
      */
     public function getTo();
 
     /**
      * Get message CC header
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return \Turahe\Core\Mail\Headers\AddressHeader|null
      */
     public function getCc();
 
     /**
      * Get message BCC header
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return \Turahe\Core\Mail\Headers\AddressHeader|null
      */
     public function getBcc();
 
     /**
      * Get message Reply-to header
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return \Turahe\Core\Mail\Headers\AddressHeader|null
      */
     public function getReplyTo();
 
     /**
      * Get message SENDER header
      *
-     * @return \Modules\Core\Common\Mail\Headers\AddressHeader|null
+     * @return \Turahe\Core\Mail\Headers\AddressHeader|null
      */
     public function getSender();
 
@@ -145,7 +143,7 @@ interface MessageInterface
     /**
      * Get message headers
      *
-     * @return \Modules\Core\Common\Mail\Headers\HeadersCollection
+     * @return \Turahe\Core\Mail\Headers\HeadersCollection
      */
     public function getHeaders();
 
@@ -153,7 +151,7 @@ interface MessageInterface
      * Get message header
      *
      * @param  string  $name
-     * @return \Modules\Core\Common\Mail\Headers\Header|\Modules\Core\Common\Mail\Headers\AddressHeader|\Modules\Core\Common\Mail\Headers\IdHeader|\Modules\Core\Common\Mail\Headers\DateHeader|null
+     * @return \Turahe\Core\Common\Mail\Headers\Header|\Turahe\Core\Mail\Headers\AddressHeader|\Turahe\Core\Common\Mail\Headers\IdHeader|\Turahe\Core\Common\Mail\Headers\DateHeader|null
      */
     public function getHeader($name);
 

@@ -2,11 +2,11 @@
 
 namespace Modules\MailClient\Client\Gmail;
 
-use Modules\Core\Common\OAuth\AccessTokenProvider;
-use Modules\Core\Facades\Google as Client;
+use Turahe\Core\Facades\Google as Client;
 use Modules\MailClient\Client\AbstractSmtpClient;
 use Modules\MailClient\Client\Compose\PreparesSymfonyMessage;
 use Modules\MailClient\Client\FolderIdentifier;
+use Turahe\Core\OAuth\AccessTokenProvider;
 
 class SmtpClient extends AbstractSmtpClient
 {

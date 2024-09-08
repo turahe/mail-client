@@ -3,17 +3,23 @@
 namespace Modules\MailClient\Client\Outlook;
 
 use Illuminate\Support\Str;
-use Microsoft\Graph\Model\BodyType;
-use Microsoft\Graph\Model\OpenTypeExtension;
-use Modules\Core\Common\Mail\EmbeddedImagesProcessor;
-use Modules\Core\Common\Microsoft\Services\Batch\BatchDeleteRequest;
-use Modules\Core\Common\Microsoft\Services\Batch\BatchPostRequest;
-use Modules\Core\Common\Microsoft\Services\Batch\BatchRequests;
-use Modules\Core\Common\OAuth\AccessTokenProvider;
-use Modules\Core\Facades\MsGraph as Api;
+use Microsoft\Graph\Generated\Models\BodyType;
+use Microsoft\Graph\Generated\Models\OpenTypeExtension;
+//use Microsoft\Graph\Model\BodyType;
+//use Microsoft\Graph\Model\OpenTypeExtension;
+//use Turahe\Core\Common\Mail\EmbeddedImagesProcessor;
+//use Turahe\Core\Common\Microsoft\Services\Batch\BatchDeleteRequest;
+//use Turahe\Core\Common\Microsoft\Services\Batch\BatchPostRequest;
+//use Turahe\Core\Common\Microsoft\Services\Batch\BatchRequests;
+use Turahe\Core\Facades\MsGraph as Api;
 use Modules\MailClient\Client\AbstractSmtpClient;
 use Modules\MailClient\Client\Contracts\SupportSaveToSentFolderParameter;
 use Modules\MailClient\Client\FolderIdentifier;
+use Turahe\Core\Mail\EmbeddedImagesProcessor;
+use Turahe\Core\Microsoft\Services\Batch\BatchDeleteRequest;
+use Turahe\Core\Microsoft\Services\Batch\BatchPostRequest;
+use Turahe\Core\Microsoft\Services\Batch\BatchRequests;
+use Turahe\Core\OAuth\AccessTokenProvider;
 
 class SmtpClient extends AbstractSmtpClient implements SupportSaveToSentFolderParameter
 {
@@ -385,16 +391,16 @@ class SmtpClient extends AbstractSmtpClient implements SupportSaveToSentFolderPa
      */
     protected function createHeadersForSingleValueProperty()
     {
-        $singleValueHeders = [];
+        $singleValueHeaders = [];
 
         foreach ($this->headers as $header) {
-            $singleValueHeders[] = [
+            $singleValueHeaders[] = [
                 'id' => static::PS_INTERNET_HEADERS_NAMESPACE.' '.$header['name'],
                 'value' => $header['value'],
             ];
         }
 
-        return $singleValueHeders;
+        return $singleValueHeaders;
     }
 
     /**

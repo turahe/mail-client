@@ -3,7 +3,7 @@
 namespace Modules\MailClient\Client\Gmail;
 
 use Google\Service\Exception as GoogleServiceException;
-use Modules\Core\Facades\Google as Client;
+use Turahe\Core\Facades\Google as Client;
 use Modules\MailClient\Client\AbstractFolder;
 use Modules\MailClient\Client\Exceptions\ConnectionErrorException;
 use Modules\MailClient\Client\Exceptions\MessageNotFoundException;

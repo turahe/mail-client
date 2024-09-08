@@ -2,8 +2,6 @@
 
 namespace Modules\MailClient\Client;
 
-use Exception;
-use Modules\Core\Common\OAuth\AccessTokenProvider;
 use Modules\MailClient\Client\Contracts\Connectable;
 use Modules\MailClient\Client\Exceptions\ConnectionErrorException;
 use Modules\MailClient\Client\Gmail\ImapClient as GmailImapClient;
@@ -14,6 +12,8 @@ use Modules\MailClient\Client\Imap\SmtpClient;
 use Modules\MailClient\Client\Imap\SmtpConfig;
 use Modules\MailClient\Client\Outlook\ImapClient as OutlookImapClient;
 use Modules\MailClient\Client\Outlook\SmtpClient as OutlookSmtpClient;
+use Modules\MailClient\Enums\ConnectionType;
+use Turahe\Core\OAuth\AccessTokenProvider;
 
 class ClientManager
 {
@@ -96,7 +96,7 @@ class ClientManager
     {
         try {
             $client->testConnection();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new ConnectionErrorException($e->getMessage(), $e->getCode(), $e);
         }
     }

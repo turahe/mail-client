@@ -1,5 +1,5 @@
 {
-    "name": "turahe/mailclient",
+    "name": "turahe/site-mailclient",
     "description": "",
     "authors": [
         {
@@ -10,12 +10,15 @@
     "require": {
         "php": "^8.3",
         "ddeboer/imap": "^1.19",
-        "google/apiclient": "^2.15.0",
-        "microsoft/microsoft-graph": "^2.12"
+        "kub-at/php-simple-html-dom-parser": "^1.9",
+        "pelago/emogrifier": "^7.2.0",
+        "zbateson/mail-mime-parser": "^3.0.3"
     },
     "extra": {
         "laravel": {
-            "providers": [],
+            "providers": [
+                "Modules\\MailClient\\Providers\\MailClientServiceProvider"
+            ],
             "aliases": {}
         }
     },
