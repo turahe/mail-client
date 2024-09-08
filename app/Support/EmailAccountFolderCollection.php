@@ -133,5 +133,4 @@ class EmailAccountFolderCollection extends Collection
             return self::ORDER_MAP[$folder->type] ?? 50;
         })->values();
     }
-
 }

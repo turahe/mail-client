@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\MailClient\Client;
 
 use Illuminate\Support\Facades\Storage;

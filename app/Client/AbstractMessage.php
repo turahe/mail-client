@@ -3,8 +3,8 @@
 namespace Modules\MailClient\Client;
 
 use Closure;
-use Modules\Core\Support\AbstractMask;
 use Modules\MailClient\Client\Contracts\MessageInterface;
+use Turahe\Core\AbstractMask;
 
 abstract class AbstractMessage extends AbstractMask implements MessageInterface
 {

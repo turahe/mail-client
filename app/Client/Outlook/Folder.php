@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\MailClient\Client\Outlook;
 
 use GuzzleHttp\Exception\ClientException;

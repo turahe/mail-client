@@ -2,8 +2,8 @@
 
 namespace Modules\MailClient\Client;
 
-use Modules\Core\Support\AbstractMask;
 use Modules\MailClient\Client\Contracts\AttachmentInterface;
+use Turahe\Core\AbstractMask;
 
 abstract class AbstractAttachment extends AbstractMask implements AttachmentInterface
 {

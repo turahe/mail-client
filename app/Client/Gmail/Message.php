@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Modules\MailClient\Client\Gmail;
 
 use Modules\MailClient\Client\AbstractMessage;

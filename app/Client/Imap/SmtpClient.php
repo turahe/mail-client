@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\MailClient\Client\Imap;
 
 use App\MailClient\Client\Imap\Illuminate;

@@ -2,8 +2,8 @@
 
 namespace Modules\MailClient\Client\Compose;
 
-use Modules\Core\Common\Mail\EmbeddedImagesProcessor;
-use Modules\Core\Common\Mail\InteractsWithSymfonyMessage;
+use Turahe\Core\Mail\EmbeddedImagesProcessor;
+use Turahe\Core\Mail\InteractsWithSymfonyMessage;
 
 trait PreparesSymfonyMessage
 {

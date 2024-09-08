@@ -1,4 +1,5 @@
 <?php
+
 namespace Modules\MailClient\Client\Compose;
 
 class MessageForward extends MessageReply

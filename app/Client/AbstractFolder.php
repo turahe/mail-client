@@ -4,8 +4,8 @@ namespace Modules\MailClient\Client;
 
 use Exception;
 use Illuminate\Support\Str;
-use Modules\Core\Support\AbstractMask;
 use Modules\MailClient\Client\Contracts\FolderInterface;
+use Turahe\Core\AbstractMask;
 
 abstract class AbstractFolder extends AbstractMask implements FolderInterface
 {
