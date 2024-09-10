@@ -15,9 +15,9 @@
         "microsoft/microsoft-graph": "^1.94",
         "pelago/emogrifier": "^7.2.0",
         "zbateson/mail-mime-parser": "^3.0.3",
-        "turahe/media": "^1.0",
+        "turahe/core": "dev-master",
         "willdurand/email-reply-parser": "^2.10",
-        "turahe/laravel-userstamps": "^1.0",
+
       "ext-pdo": "*"
     },
     "require-dev": {
@@ -43,8 +43,6 @@
             "Turahe\\MailClient\\Tests\\": "tests/"
         }
     },
-    "config": {
-        "preferred-install": "dist"
-    },
-    "minimum-stability": "stable"
+
+    "minimum-stability": "dev"
 }

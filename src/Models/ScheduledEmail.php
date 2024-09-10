@@ -59,7 +59,7 @@ class ScheduledEmail extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(config('auth.providers.users.model'), 'email_account_id');
     }
 
     /**

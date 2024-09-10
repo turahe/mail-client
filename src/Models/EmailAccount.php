@@ -27,8 +27,8 @@ use Turahe\UserStamps\Concerns\HasUserStamps;
 
 class EmailAccount extends Model
 {
-    use EmailAccountImap,
-        HasUserStamps,
+    use EmailAccountImap;
+    use HasUserStamps;
 
     /**
      * Indicates the primary meta key for user.
@@ -130,7 +130,7 @@ class EmailAccount extends Model
      */
     public function isInitialSyncPerformed(): bool
     {
-        return ! empty($this->last_sync_at);
+        return !empty($this->last_sync_at);
     }
 
     /**
@@ -138,7 +138,7 @@ class EmailAccount extends Model
      */
     public function isSyncOnHold(): bool
     {
-        if (! $resumeDate = $this->getSyncResumeDate()) {
+        if (!$resumeDate = $this->getSyncResumeDate()) {
             return false;
         }
 
@@ -191,10 +191,10 @@ class EmailAccount extends Model
     protected function requiresAuth(): Attribute
     {
         return Attribute::make(
-            get: fn (bool $value) => is_null($this->oAuthAccount) ?
+            get: fn(bool $value) => is_null($this->oAuthAccount) ?
                 $value :
                 $this->oAuthAccount->requires_auth,
-            set: fn (bool $value) => $value,
+            set: fn(bool $value) => $value,
         );
     }
 
@@ -203,7 +203,7 @@ class EmailAccount extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\Turahe\Users\Models\User::class);
+        return $this->belongsTo(config('auth.providers.users.model'));
     }
 
     /**
@@ -259,7 +259,7 @@ class EmailAccount extends Model
      */
     public function isPersonal(): bool
     {
-        return ! $this->isShared();
+        return !$this->isShared();
     }
 
     /**
@@ -270,7 +270,7 @@ class EmailAccount extends Model
     protected function type(): Attribute
     {
         return Attribute::get(
-            fn () => $this->isShared() ? EmailAccountType::Shared : EmailAccountType::Personal
+            fn() => $this->isShared() ? EmailAccountType::Shared : EmailAccountType::Personal
         );
     }
 
@@ -281,7 +281,7 @@ class EmailAccount extends Model
     {
         $user = $user ?? auth()->user();
 
-        return (int) $user->getSetting(self::PRIMARY_META_KEY) === (int) $this->id;
+        return (int)$user->getSetting(self::PRIMARY_META_KEY) === (int)$this->id;
     }
 
     /**
@@ -299,7 +299,7 @@ class EmailAccount extends Model
      */
     public static function unmarkAsPrimary($user): void
     {
-        $user->removeSetting(self::PRIMARY_META_KEY);
+        $user->getSetting(self::PRIMARY_META_KEY);
     }
 
     /**
@@ -308,7 +308,7 @@ class EmailAccount extends Model
     protected function displayEmail(): Attribute
     {
         return Attribute::get(
-            fn () => $this->alias_email ?? $this->email
+            fn() => $this->alias_email ?? $this->email
         );
     }
 
@@ -318,7 +318,7 @@ class EmailAccount extends Model
     protected function fromNameHeader(): Attribute
     {
         return Attribute::get(
-            fn () => $this->getSetting('from_name_header') ?: static::DEFAULT_FROM_NAME_HEADER
+            fn() => $this->getMeta('from_name_header') ?: static::DEFAULT_FROM_NAME_HEADER
         );
     }
 
@@ -364,7 +364,7 @@ class EmailAccount extends Model
      */
     public function canSendEmail(): bool
     {
-        return ! ($this->requires_auth || $this->isSyncStopped());
+        return !($this->requires_auth || $this->isSyncStopped());
     }
 
     /**
@@ -433,8 +433,8 @@ class EmailAccount extends Model
      */
     public function scopeWithFolders(Builder $query): void
     {
-        $query->with(['folders' => fn ($query) => $query->withCount([
-            'messages as unread_count' => fn ($query) => $query->unread(),
+        $query->with(['folders' => fn($query) => $query->withCount([
+            'messages as unread_count' => fn($query) => $query->unread(),
         ])]);
     }
 
@@ -444,7 +444,7 @@ class EmailAccount extends Model
     public function scopeWithCommon(Builder $query): void
     {
         $query->withCount([
-            'messages as unread_count' => fn ($query) => $query->unread(),
+            'messages as unread_count' => fn($query) => $query->unread(),
         ])->withFolders()->with([
             'user',
             'sentFolder',
@@ -458,7 +458,7 @@ class EmailAccount extends Model
      */
     public function setAuthRequired(bool $value = true): static
     {
-        if (! is_null($this->oAuthAccount)) {
+        if (!is_null($this->oAuthAccount)) {
             $this->oAuthAccount->setAuthRequired($value);
         }
 
@@ -502,7 +502,7 @@ class EmailAccount extends Model
         }
 
         return EmailAccountMessage::unread()
-            ->whereHas('folders', fn ($query) => $query->where('syncable', 1))
+            ->whereHas('folders', fn($query) => $query->where('syncable', 1))
             ->whereIn('email_account_id', $userAccounts->pluck('id')->all())
             ->count();
     }
@@ -586,7 +586,7 @@ class EmailAccount extends Model
 
         // To prevent looping through all messages and loading them into
         // memory, we will get their id's only and purge the media for the messages where media is available
-        $messagesIds = $this->messages()->cursor()->map(fn ($message) => $message->id);
+        $messagesIds = $this->messages()->cursor()->map(fn($message) => $message->id);
 
         (new Media)->purgeByMediableIds(EmailAccountMessage::class, $messagesIds);
 
@@ -596,7 +596,7 @@ class EmailAccount extends Model
 
         $systemEmailAccountId = settings('system_email_account_id');
 
-        if ((int) $systemEmailAccountId === (int) $this->id) {
+        if ((int)$systemEmailAccountId === (int)$this->id) {
             settings()->forget('system_email_account_id')->save();
         }
     }
