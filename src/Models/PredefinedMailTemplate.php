@@ -31,7 +31,7 @@ class PredefinedMailTemplate extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\Turahe\Users\Models\User::class);
+        return $this->belongsTo(config('auth.providers.users.model'));
     }
 
     /**
@@ -50,13 +50,5 @@ class PredefinedMailTemplate extends Model
     public function scopeShared(Builder $query): void
     {
         $query->where('is_shared', true);
-    }
-
-    /**
-     * Create a new factory instance for the model.
-     */
-    protected static function newFactory(): PredefinedMailTemplateFactory
-    {
-        return PredefinedMailTemplateFactory::new();
     }
 }

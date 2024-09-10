@@ -281,7 +281,7 @@ class EmailAccount extends Model
     {
         $user = $user ?? auth()->user();
 
-        return (int) $user->getMeta(self::PRIMARY_META_KEY) === (int) $this->id;
+        return (int) $user->getSetting(self::PRIMARY_META_KEY) === (int) $this->id;
     }
 
     /**
@@ -289,7 +289,7 @@ class EmailAccount extends Model
      */
     public function markAsPrimary($user): static
     {
-        $user->setMeta(self::PRIMARY_META_KEY, $this->id);
+        $user->getSetting(self::PRIMARY_META_KEY, $this->id);
 
         return $this;
     }
@@ -299,7 +299,7 @@ class EmailAccount extends Model
      */
     public static function unmarkAsPrimary($user): void
     {
-        $user->removeMeta(self::PRIMARY_META_KEY);
+        $user->removeSetting(self::PRIMARY_META_KEY);
     }
 
     /**
@@ -318,7 +318,7 @@ class EmailAccount extends Model
     protected function fromNameHeader(): Attribute
     {
         return Attribute::get(
-            fn () => $this->getMeta('from_name_header') ?: static::DEFAULT_FROM_NAME_HEADER
+            fn () => $this->getSetting('from_name_header') ?: static::DEFAULT_FROM_NAME_HEADER
         );
     }
 

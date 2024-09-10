@@ -5,6 +5,7 @@ namespace Turahe\MailClient\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Carbon;
 use Turahe\MailClient\Concerns\SendsScheduledEmail;
 use Turahe\Media\HasMedia;
@@ -176,7 +177,7 @@ class ScheduledEmail extends Model
      */
     public function scopeOfResource(Builder $query, string $resourceName, int $resourceId): void
     {
-        $resource = Innoclapps::resourceByName($resourceName);
+        $resource = Application::resourceByName($resourceName);
 
         $query->whereRaw(
             "id IN (SELECT scheduled_email_id FROM {$query->getConnection()->getTablePrefix()}model_has_scheduled_emails WHERE model_type = ? AND model_id = ?)",

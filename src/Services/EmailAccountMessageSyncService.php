@@ -1,14 +1,5 @@
 <?php
-/**
- * Concord CRM - https://www.concordcrm.com
- *
- * @version   1.5.0
- *
- * @link      Releases - https://www.concordcrm.com/releases
- * @link      Terms Of Service - https://www.concordcrm.com/terms
- *
- * @copyright Copyright (c) 2022-2024 KONKORD DIGITAL
- */
+
 
 namespace Turahe\MailClient\Services;
 
@@ -16,24 +7,21 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use MediaUploader;
-use PDOException;
-use Plank\Mediable\Exceptions\MediaUploadException;
 use Throwable;
-use Turahe\Core\Common\Mail\ContentDecoder;
-use Turahe\Core\Facades\Innoclapps;
-use Turahe\Core\Resource\AssociatesResources;
+//use Turahe\Core\Resource\AssociatesResources;
 use Turahe\MailClient\Client\AbstractMessage;
 use Turahe\MailClient\Client\Contracts\AttachmentInterface;
+use Turahe\MailClient\Client\Contracts\MessageInterface;
 use Turahe\MailClient\Concerns\InteractsWithEmailMessageAssociations;
 use Turahe\MailClient\Events\EmailAccountMessageCreated;
 use Turahe\MailClient\Models\EmailAccount;
 use Turahe\MailClient\Models\EmailAccountMessage;
+use Turahe\Media\MediaUploader;
 
 class EmailAccountMessageSyncService
 {
-    use AssociatesResources,
-        InteractsWithEmailMessageAssociations;
+//    use AssociatesResources,
+      use  InteractsWithEmailMessageAssociations;
 
     /**
      * Message addresses headers and relations.
@@ -76,7 +64,7 @@ class EmailAccountMessageSyncService
 
         try {
             $dbMessage = EmailAccountMessage::create($attributes);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             // In most cases this may happen when the message has invalid subject or body
             // Confirmed with subject that contains binary string
             // https://stackoverflow.com/questions/1734005/in-php-what-is-a-binary-string-bxxxx
@@ -154,7 +142,7 @@ class EmailAccountMessageSyncService
 
         try {
             $dbMessage->fill($attributes)->save();
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             // In most cases this may happen when the message has invalid subject or body
             // Confirmed with subject that contains binary string
             // https://stackoverflow.com/questions/1734005/in-php-what-is-a-binary-string-bxxxx
@@ -260,7 +248,8 @@ class EmailAccountMessageSyncService
     /**
      * Persist the message header in database
      *
-     * @param \Turahe\MailClient\Client\Contracts\MessageInterface
+     * @param MessageInterface $message
+     * @param EmailAccountMessage $dbMessage
      */
     protected function persistHeaders($message, EmailAccountMessage $dbMessage): void
     {
@@ -388,7 +377,7 @@ class EmailAccountMessageSyncService
         }
 
         $storedMedia = [];
-        $allowedExtensions = Innoclapps::allowedUploadExtensions();
+        $allowedExtensions = config('mail-client.allow_extensions');
 
         foreach ($attachments as $attachment) {
             $tmpFile = tmpfile();
@@ -399,20 +388,13 @@ class EmailAccountMessageSyncService
             );
 
             try {
-                $media = MediaUploader::fromSource($tmpFile)
-                    ->toDirectory($message->getMediaDirectory())
-                    ->onDuplicateIncrement()
-                    ->useFilename(pathinfo($attachment->getFileName(), PATHINFO_FILENAME))
-                    // Allow any extension
-                    ->setAllowedExtensions(array_unique(
-                        array_merge($allowedExtensions, [pathinfo($attachment->getFileName(), PATHINFO_EXTENSION)])
-                    ))
+                $media = MediaUploader::fromFile($tmpFile)
                     ->upload();
 
                 $message->attachMedia($media, $tag);
 
                 $storedMedia[] = $media;
-            } catch (MediaUploadException|Throwable|Exception $e) {
+            } catch (Throwable|Exception $e) {
                 Log::debug(
                     sprintf(
                         'Failed to store mail message [ID: %s] attachment, filename: %s, exception message: %s',
@@ -439,8 +421,9 @@ class EmailAccountMessageSyncService
      * Associate the message if it's reply to
      * the original message the reply is performed to
      *
-     * @param \Turahe\MailClient\Models\EmailAccountMessage
-     * @param \Turahe\MailClient\Client\Contracts\MessageInterface
+     * @param $dbMessage
+     * @param $remoteMessage
+     * @return bool
      */
     protected function syncAssociationsWhenReply($dbMessage, $remoteMessage): bool
     {
@@ -501,12 +484,12 @@ class EmailAccountMessageSyncService
         return $subject;
     }
 
-    protected function isPDOExceptionIncorrectStringValue(PDOException|Exception $e): bool
+    protected function isPDOExceptionIncorrectStringValue(\PDOException|Exception $e): bool
     {
         return str_contains($e->getMessage(), 'Incorrect string value');
     }
 
-    protected function isPDOExceptionInvalidSubjectString(PDOException|Exception $e): bool
+    protected function isPDOExceptionInvalidSubjectString(\PDOException|Exception $e): bool
     {
         if (! str_contains($e->getMessage(), '`subject` at row 1')) {
             return false;
@@ -515,7 +498,7 @@ class EmailAccountMessageSyncService
         return $this->isPDOExceptionIncorrectStringValue($e);
     }
 
-    protected function isPDOExceptionInvalidMessageString(PDOException|Exception $e): bool
+    protected function isPDOExceptionInvalidMessageString(\PDOException|Exception $e): bool
     {
         if (! Str::contains($e->getMessage(), ['`html_body` at row 1', '`text_body` at row 1'])) {
             return false;

@@ -12,11 +12,11 @@ class MailClientServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../../config/config.php' => $this->app->configPath('mail-client.php'),
+            __DIR__.'./../../config/config.php' => $this->app->configPath('mail-client.php'),
         ], 'config');
 
         if ($this->app instanceof \Illuminate\Foundation\Application) {
-            $databasePath = __DIR__.'/../database/migrations';
+            $databasePath = __DIR__.'./../../database/migrations';
             $this->loadMigrationsFrom($databasePath);
         }
 
@@ -24,7 +24,7 @@ class MailClientServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'mail-client');
+        $this->mergeConfigFrom(__DIR__.'./../../config/config.php', 'mail-client');
 
     }
 }

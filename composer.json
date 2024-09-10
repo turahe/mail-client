@@ -17,7 +17,8 @@
         "zbateson/mail-mime-parser": "^3.0.3",
         "turahe/media": "^1.0",
         "willdurand/email-reply-parser": "^2.10",
-        "turahe/laravel-userstamps": "^1.0"
+        "turahe/laravel-userstamps": "^1.0",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "laravel/pint": "^1.17",
