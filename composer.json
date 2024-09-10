@@ -1,5 +1,5 @@
 {
-    "name": "turahe/site-mailclient",
+    "name": "turahe/mailclient",
     "description": "",
     "authors": [
         {
@@ -10,28 +10,40 @@
     "require": {
         "php": "^8.3",
         "ddeboer/imap": "^1.19",
+        "google/apiclient": "^2.15.0",
         "kub-at/php-simple-html-dom-parser": "^1.9",
+        "microsoft/microsoft-graph": "^1.94",
         "pelago/emogrifier": "^7.2.0",
-        "zbateson/mail-mime-parser": "^3.0.3"
+        "zbateson/mail-mime-parser": "^3.0.3",
+        "turahe/media": "^1.0",
+        "willdurand/email-reply-parser": "^2.10",
+        "turahe/laravel-userstamps": "^1.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.17",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^9.4"
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Modules\\MailClient\\Providers\\MailClientServiceProvider"
+                "Turahe\\MailClient\\Providers\\MailClientServiceProvider"
             ],
             "aliases": {}
         }
     },
     "autoload": {
         "psr-4": {
-            "Modules\\MailClient\\": "app/",
-            "Modules\\MailClient\\Database\\Factories\\": "database/factories/",
-            "Modules\\MailClient\\Database\\Seeders\\": "database/seeders/"
+            "Turahe\\MailClient\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Modules\\MailClient\\Tests\\": "tests/"
+            "Turahe\\MailClient\\Tests\\": "tests/"
         }
-    }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "minimum-stability": "stable"
 }
