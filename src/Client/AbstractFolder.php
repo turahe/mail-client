@@ -176,8 +176,9 @@ abstract class AbstractFolder extends AbstractMask implements FolderInterface
     /**
      * __get magic method
      *
-     * @param  string  $name
+     * @param string $name
      * @return mixed
+     * @throws Exception
      */
     public function __get($name)
     {

@@ -97,7 +97,6 @@ class FolderCollection extends Collection
      * Create tree from folders delimiter
      *
      * @param  null|string  $delimiter
-     * @param  bool  $includeBaseValue
      * @return array
      */
     protected function explodeTree($delimiter)

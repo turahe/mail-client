@@ -28,7 +28,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Turahe\\MailClient\\Providers\\MailClientServiceProvider"
+                "Turahe\\MailClient\\MailClientServiceProvider"
             ],
             "aliases": {}
         }

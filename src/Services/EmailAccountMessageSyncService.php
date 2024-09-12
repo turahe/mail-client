@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Turahe\MailClient\Services;
 
 use Exception;
@@ -20,8 +19,8 @@ use Turahe\Media\MediaUploader;
 
 class EmailAccountMessageSyncService
 {
-//    use AssociatesResources,
-      use  InteractsWithEmailMessageAssociations;
+    //    use AssociatesResources,
+    use InteractsWithEmailMessageAssociations;
 
     /**
      * Message addresses headers and relations.
@@ -248,8 +247,7 @@ class EmailAccountMessageSyncService
     /**
      * Persist the message header in database
      *
-     * @param MessageInterface $message
-     * @param EmailAccountMessage $dbMessage
+     * @param  MessageInterface  $message
      */
     protected function persistHeaders($message, EmailAccountMessage $dbMessage): void
     {
@@ -420,10 +418,6 @@ class EmailAccountMessageSyncService
     /**
      * Associate the message if it's reply to
      * the original message the reply is performed to
-     *
-     * @param $dbMessage
-     * @param $remoteMessage
-     * @return bool
      */
     protected function syncAssociationsWhenReply($dbMessage, $remoteMessage): bool
     {

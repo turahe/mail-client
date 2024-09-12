@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Turahe\MailClient\Services;
 
 use Illuminate\Support\Facades\DB;
