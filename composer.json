@@ -7,7 +7,7 @@
             "email": "wachid@outlook.com"
         }
     ],
-    "licence": "MIT",
+    "license": "proprietary",
     "require": {
         "php": "^8.3",
         "ext-pdo": "*",
