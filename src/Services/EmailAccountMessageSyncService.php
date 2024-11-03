@@ -6,8 +6,6 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Throwable;
-//use Turahe\Core\Resource\AssociatesResources;
 use Turahe\MailClient\Client\AbstractMessage;
 use Turahe\MailClient\Client\Contracts\AttachmentInterface;
 use Turahe\MailClient\Client\Contracts\MessageInterface;
@@ -392,7 +390,7 @@ class EmailAccountMessageSyncService
                 $message->attachMedia($media, $tag);
 
                 $storedMedia[] = $media;
-            } catch (Throwable|Exception $e) {
+            } catch (\Throwable|Exception $e) {
                 Log::debug(
                     sprintf(
                         'Failed to store mail message [ID: %s] attachment, filename: %s, exception message: %s',

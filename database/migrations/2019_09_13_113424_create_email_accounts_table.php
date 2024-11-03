@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_accounts', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id');
             $table->string('email')->unique();
             $table->string('alias_email')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users');
@@ -41,8 +41,12 @@ return new class extends Migration
             $table->unsignedInteger('smtp_port')->nullable()->comment('IMAP');
             $table->string('smtp_encryption', 8)->nullable()->comment('IMAP');
 
-            $table->foreignId('created_by')->constrained('users');
-            $table->timestamps();
+            $table->userstamps();
+            $table->softUserstamps();
+
+            $table->integer('deleted_at')->index()->nullable();
+            $table->integer('created_at')->index()->nullable();
+            $table->integer('updated_at')->index()->nullable();
         });
     }
 

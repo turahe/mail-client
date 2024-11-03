@@ -4,10 +4,12 @@ namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Carbon;
 use Turahe\MailClient\Client\Client;
@@ -27,7 +29,9 @@ use Turahe\UserStamps\Concerns\HasUserStamps;
 class EmailAccount extends Model
 {
     use EmailAccountImap;
+    use HasUlids;
     use HasUserStamps;
+    use SoftDeletes;
 
     /**
      * Indicates the primary meta key for user.
@@ -52,6 +56,8 @@ class EmailAccount extends Model
     protected $hidden = [
         'password',
     ];
+
+    protected $dateFormat = 'U';
 
     /**
      * The attributes that should be cast.
@@ -81,32 +87,44 @@ class EmailAccount extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'email', 'alias_email', 'password', 'connection_type',
-        'last_sync_at', 'requires_auth', 'initial_sync_from',
-        'sent_folder_id', 'trash_folder_id', 'create_contact',
+        'email',
+        'alias_email',
+        'password',
+        'connection_type',
+        'last_sync_at',
+        'requires_auth',
+        'initial_sync_from',
+        'sent_folder_id',
+        'trash_folder_id',
+        'create_contact',
         // imap
-        'validate_cert', 'username',
-        'imap_server', 'imap_port', 'imap_encryption',
-        'smtp_server', 'smtp_port', 'smtp_encryption',
+        'validate_cert',
+        'username',
+        'imap_server',
+        'imap_port',
+        'imap_encryption',
+        'smtp_server',
+        'smtp_port',
+        'smtp_encryption',
     ];
 
     /**
      * Perform any actions required after the model boots.
      */
-    protected static function booted(): void
-    {
-        static::deleting(function (EmailAccount $model) {
-            $model->purge();
-        });
-    }
+    //    protected static function booted(): void
+    //    {
+    //        static::deleting(function (EmailAccount $model) {
+    //            $model->purge();
+    //        });
+    //    }
 
     /**
      * A model has OAuth connection.
      */
-    public function oAuthAccount(): HasOne
-    {
-        return $this->hasOne(OAuthAccount::class, 'id', 'access_token_id');
-    }
+    //    public function oAuthAccount(): HasOne
+    //    {
+    //        return $this->hasOne(OAuthAccount::class, 'id', 'access_token_id');
+    //    }
 
     /**
      * Check whether the user or system has sofly disabled the sync.

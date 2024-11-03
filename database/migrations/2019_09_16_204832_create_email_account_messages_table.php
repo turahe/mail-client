@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_messages', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id');
             $table->foreignId('email_account_id')->constrained('email_accounts');
             $table->string('remote_id')->index()->comment('Remote Message Identifier (uuid, id)');
 
@@ -36,7 +36,13 @@ return new class extends Migration
             $table->integer('clicks')->nullable();
             $table->datetime('clicked_at')->nullable();
             $table->dateTime('date');
-            $table->timestamps();
+
+            $table->userstamps();
+            $table->softUserstamps();
+
+            $table->integer('deleted_at')->index()->nullable();
+            $table->integer('created_at')->index()->nullable();
+            $table->integer('updated_at')->index()->nullable();
         });
     }
 

@@ -12,7 +12,7 @@ declare(strict_types=1);
  *
  */
 
-namespace App\Client;
+namespace Turahe\MailClient\Client;
 
 use Illuminate\Contracts\Support\Arrayable;
 use JsonSerializable;

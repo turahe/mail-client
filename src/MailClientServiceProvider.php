@@ -11,8 +11,7 @@ class MailClientServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-//        $this->mergeConfigFrom(__DIR__.'./../config/mail-client.php', 'mail-client.php');
-
+        //        $this->mergeConfigFrom(__DIR__.'./../config/mail-client.php', 'mail-client.php');
 
         if ($this->app instanceof \Illuminate\Foundation\Application) {
             $databasePath = __DIR__.'./../database/migrations';
@@ -27,6 +26,7 @@ class MailClientServiceProvider extends ServiceProvider
         }
 
     }
+
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/mail-client.php', 'mail-client');

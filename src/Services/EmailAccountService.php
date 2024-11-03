@@ -1,21 +1,11 @@
 <?php
-/**
- * Concord CRM - https://www.concordcrm.com
- *
- * @version   1.5.0
- *
- * @link      Releases - https://www.concordcrm.com/releases
- * @link      Terms Of Service - https://www.concordcrm.com/terms
- *
- * @copyright Copyright (c) 2022-2024 KONKORD DIGITAL
- */
 
 namespace Turahe\MailClient\Services;
 
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Arr;
-use Turahe\MailClient\Client\ConnectionType;
 use Turahe\MailClient\Client\FolderCollection;
+use Turahe\MailClient\Enums\ConnectionType;
 use Turahe\MailClient\Models\EmailAccount;
 use Turahe\MailClient\Models\EmailAccountFolder;
 
@@ -111,9 +101,7 @@ class EmailAccountService
         }
 
         if ($folder['children'] instanceof FolderCollection) {
-            /**
-             * @see \Turahe\MailClient\Listeners\CreateEmailAccountViaOAuth
-             */
+
             $folder['children'] = $folder['children']->toArray();
         }
 

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Turahe\Core\Concerns\HasAvatar;
 use Turahe\MailClient\Support\EmailAccountMessageBody;
 use Turahe\Media\HasMedia;
 
@@ -22,8 +21,7 @@ use Turahe\Media\HasMedia;
  */
 class EmailAccountMessage extends Model
 {
-    use HasAvatar,
-        HasMedia;
+    use HasMedia;
 
     const TAGS_TYPE = 'messages';
 

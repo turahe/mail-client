@@ -3,24 +3,26 @@
 namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Lang;
 use Turahe\MailClient\Client\FolderIdentifier;
 use Turahe\MailClient\Enums\ConnectionType;
 use Turahe\MailClient\Support\EmailAccountFolderCollection;
 use Turahe\Media\Models\Media;
+use Turahe\UserStamps\Concerns\HasUserStamps;
 
-/**
- * @method static \Illuminate\Database\Eloquent\Builder|EmailAccountFolder newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailAccountFolder newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailAccountFolder query()
- *
- * @mixin \Eloquent
- */
 class EmailAccountFolder extends Model
 {
+    use HasUlids;
+    use HasUserStamps;
+    use SoftDeletes;
+
+    protected $dateFormat = 'U';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,28 +33,26 @@ class EmailAccountFolder extends Model
         'email_account_id', 'syncable', 'selectable', 'type', 'support_move',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'selectable' => 'boolean',
-        'syncable' => 'boolean',
-        'support_move' => 'boolean',
-        'parent_id' => 'int',
-        'email_account_id' => 'int',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'selectable' => 'boolean',
+            'syncable' => 'boolean',
+            'support_move' => 'boolean',
+            'parent_id' => 'int',
+            'email_account_id' => 'string',
+        ];
+    }
 
     /**
      * Perform any actions required after the model boots.
      */
-    protected static function booted(): void
-    {
-        static::deleting(function (EmailAccountFolder $model) {
-            $model->purge();
-        });
-    }
+    //    protected static function booted(): void
+    //    {
+    //        static::deleting(function (EmailAccountFolder $model) {
+    //            $model->purge();
+    //        });
+    //    }
 
     /**
      * A folder belongs to email account

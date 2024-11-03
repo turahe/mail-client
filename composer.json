@@ -9,16 +9,16 @@
     ],
     "require": {
         "php": "^8.3",
+        "ext-pdo": "*",
         "ddeboer/imap": "^1.19",
-        "google/apiclient": "^2.15.0",
+        "google/apiclient": "^2.17",
         "kub-at/php-simple-html-dom-parser": "^1.9",
-        "microsoft/microsoft-graph": "^1.94",
+        "microsoft/microsoft-graph": "^2.14",
         "pelago/emogrifier": "^7.2.0",
-        "zbateson/mail-mime-parser": "^3.0.3",
-        "turahe/core": "dev-master",
+        "turahe/laravel-userstamps": "^1.0",
+        "turahe/media": "^1.0",
         "willdurand/email-reply-parser": "^2.10",
-
-      "ext-pdo": "*"
+        "zbateson/mail-mime-parser": "^3.0.3"
     },
     "require-dev": {
         "laravel/pint": "^1.17",
@@ -44,5 +44,12 @@
         }
     },
 
-    "minimum-stability": "dev"
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "tbachert/spi": true
+        },
+        "sort-packages": true
+    }
 }

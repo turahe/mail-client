@@ -16,7 +16,13 @@ return new class extends Migration
             $table->foreignId('message_id')->constrained('email_account_messages')->cascadeOnDelete();
             $table->text('url')->nullable();
             $table->integer('total')->default(1);
-            $table->timestamps();
+
+            $table->userstamps();
+            $table->softUserstamps();
+
+            $table->integer('deleted_at')->index()->nullable();
+            $table->integer('created_at')->index()->nullable();
+            $table->integer('updated_at')->index()->nullable();
         });
     }
 

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_folders', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id');
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreignId('email_account_id')->constrained('email_accounts');
             $table->string('remote_id')->nullable()
@@ -23,7 +23,13 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('name');
             $table->string('display_name');
-            $table->timestamps();
+
+            $table->userstamps();
+            $table->softUserstamps();
+
+            $table->integer('deleted_at')->index()->nullable();
+            $table->integer('created_at')->index()->nullable();
+            $table->integer('updated_at')->index()->nullable();
         });
     }
 

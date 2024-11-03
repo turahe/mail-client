@@ -12,13 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('predefined_mail_templates', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id');
             $table->string('name')->unique();
             $table->string('subject');
             $table->text('body');
             $table->boolean('is_shared')->default(true);
             $table->foreignId('user_id')->nullable()->comment('Owner')->constrained('users');
-            $table->timestamps();
+
+            $table->userstamps();
+            $table->softUserstamps();
+
+            $table->integer('deleted_at')->index()->nullable();
+            $table->integer('created_at')->index()->nullable();
+            $table->integer('updated_at')->index()->nullable();
         });
     }
 

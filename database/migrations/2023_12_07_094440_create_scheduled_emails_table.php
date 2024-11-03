@@ -30,7 +30,13 @@ return new class extends Migration
             $table->foreignId('related_message_id')->nullable()->constrained('email_account_messages');  // for reply and forward
             $table->dateTime('sent_at')->nullable();
             $table->dateTime('scheduled_at')->index();
-            $table->timestamps();
+
+            $table->userstamps();
+            $table->softUserstamps();
+
+            $table->integer('deleted_at')->index()->nullable();
+            $table->integer('created_at')->index()->nullable();
+            $table->integer('updated_at')->index()->nullable();
         });
     }
 

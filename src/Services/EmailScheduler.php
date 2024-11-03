@@ -1,23 +1,12 @@
 <?php
-/**
- * Concord CRM - https://www.concordcrm.com
- *
- * @version   1.5.0
- *
- * @link      Releases - https://www.concordcrm.com/releases
- * @link      Terms Of Service - https://www.concordcrm.com/terms
- *
- * @copyright Copyright (c) 2022-2024 KONKORD DIGITAL
- */
 
 namespace Turahe\MailClient\Services;
 
-use DateTime;
-use Plank\Mediable\Facades\MediaUploader;
-use Turahe\Core\Facades\Innoclapps;
 use Turahe\MailClient\Models\EmailAccount;
 use Turahe\MailClient\Models\EmailAccountMessage;
 use Turahe\MailClient\Models\ScheduledEmail;
+use Turahe\Media\MediaUploader;
+use Turahe\Media\Models\Media;
 
 class EmailScheduler
 {
@@ -46,7 +35,7 @@ class EmailScheduler
     /**
      * Schedule an email to be sent at the given date.
      */
-    public function schedule(string|DateTime $date): ScheduledEmail
+    public function schedule(string|\DateTime $date): ScheduledEmail
     {
         $message = ScheduledEmail::create([
             'subject' => $this->subject,
@@ -86,7 +75,7 @@ class EmailScheduler
     protected function attachAssociationsToMessage(ScheduledEmail $message): ScheduledEmail
     {
         foreach ($this->associations as $resourceName => $modelIds) {
-            $resource = Innoclapps::resourceByName($resourceName);
+            $resource = Media::resourceByName($resourceName);
 
             if (count($modelIds) > 0) {
                 $records = $resource->newQuery()->findMany($modelIds);
@@ -108,11 +97,7 @@ class EmailScheduler
         $this->attachPendingMediaToMessage($message);
 
         foreach ($this->additionalAttachments as $media) {
-            $newMedia = MediaUploader::fromString($media->contents())
-                ->toDirectory($message->getMediaDirectory())
-                ->setAllowedExtensions(Innoclapps::allowedUploadExtensions())
-                ->useFilename($media->filename)
-                ->onDuplicateIncrement()
+            $newMedia = MediaUploader::fromFile($media->contents())
                 ->upload();
 
             $message->attachMedia($newMedia, EmailAccountMessage::ATTACHMENTS_MEDIA_TAG);
