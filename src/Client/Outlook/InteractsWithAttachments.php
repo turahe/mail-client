@@ -3,6 +3,7 @@
 namespace Turahe\MailClient\Client\Outlook;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Str;
 use Microsoft\Graph\Model\UploadSession;
 use Turahe\Core\Common\Microsoft\Services\Batch\BatchPostRequest;
@@ -27,10 +28,8 @@ trait InteractsWithAttachments
 
     /**
      * Build the message attachments array
-     *
-     * @return array
      */
-    protected function buildAttachments()
+    protected function buildAttachments(): array
     {
         if ($this->attachmentsBuild) {
             return $this->attachmentsBuild;
@@ -50,10 +49,8 @@ trait InteractsWithAttachments
 
     /**
      * Group the attachments in "upload" groups based on their size
-     *
-     * @return array
      */
-    protected function createAttachmentsUploadGroups()
+    protected function createAttachmentsUploadGroups(): array
     {
         return collect($this->buildAttachments())->mapToGroups(function ($attachment) {
             if ($attachment['size'] < $this->maxRequestFileSize) {
@@ -67,10 +64,9 @@ trait InteractsWithAttachments
     /**
      * Perform upload for the attachments based on their groups
      *
-     * @param  string  $messageId
      * @return void
      */
-    protected function performGroupsUpload($messageId)
+    protected function performGroupsUpload(string $messageId)
     {
         $groups = $this->createAttachmentsUploadGroups();
         $this->attachLargeFiles($groups['session'] ?? [], $messageId);
@@ -79,12 +75,8 @@ trait InteractsWithAttachments
 
     /**
      * Prepare the given attachment.
-     *
-     * @param  array  $attachment
-     * @param  array  $options
-     * @return array
      */
-    protected function prepAttachment($attachment, $options = [])
+    protected function prepAttachment(array $attachment, array $options = []): array
     {
         $contents = file_get_contents($attachment['file']);
 
@@ -100,12 +92,8 @@ trait InteractsWithAttachments
 
     /**
      * Prepare the given data attachment.
-     *
-     * @param  array  $attachment
-     * @param  array  $options
-     * @return array
      */
-    protected function prepAttachmentData($attachment, $options = [])
+    protected function prepAttachmentData(array $attachment, array $options = []): array
     {
         $raw = Str::isBase64Encoded($attachment['data']) ? base64_decode($attachment['data']) : $attachment['data'];
 
@@ -124,11 +112,9 @@ trait InteractsWithAttachments
     /**
      * Prepare the attachment options
      *
-     * @param  array  $attachment
-     * @param  array  $options
      * @return array
      */
-    protected function prepAttachmentOptions($attachment, $options = [])
+    protected function prepAttachmentOptions(array $attachment, array $options = [])
     {
         // First we will check for a MIME type on the message, which instructs the
         // mail client on what type of attachment the file is so that it may be
@@ -161,11 +147,9 @@ trait InteractsWithAttachments
     /**
      * Get the message attachment URL
      *
-     * @param  string  $messageId
-     * @param  string  $extra
      * @return string
      */
-    protected function getAttachmentsUri($messageId, $extra = '')
+    protected function getAttachmentsUri(string $messageId, string $extra = '')
     {
         return '/me/messages/'.$messageId.'/attachments'.($extra ? ('/'.$extra) : '');
     }
@@ -216,11 +200,11 @@ trait InteractsWithAttachments
      *
      * @see https://docs.microsoft.com/en-us/graph/outlook-large-attachments
      *
-     * @param  array  $attachment
-     * @param  string  $messageId
      * @return void
+     *
+     * @throws GuzzleException
      */
-    protected function attachLargeFile($attachment, $messageId)
+    protected function attachLargeFile(array $attachment, string $messageId)
     {
         // Use Guzzle as the Microsoft API is throwin error when using the API Client
         // as the API already includes the auth token but it should not be passed as recommended
@@ -281,11 +265,9 @@ trait InteractsWithAttachments
     /**
      * Attach large files (3MB-150MB) to the given message
      *
-     * @param  array  $attachments
-     * @param  string  $messageId
      * @return void
      */
-    protected function attachLargeFiles($attachments, $messageId)
+    protected function attachLargeFiles(array $attachments, string $messageId)
     {
         foreach ($attachments as $attachment) {
             $this->attachLargeFile($attachment, $messageId);
@@ -294,10 +276,8 @@ trait InteractsWithAttachments
 
     /**
      * Check whether the attachments should be uploaded with session
-     *
-     * @return bool
      */
-    protected function shouldUploadWithSession()
+    protected function shouldUploadWithSession(): bool
     {
         $totalSize = collect($this->buildAttachments())->pluck('size')->sum();
 

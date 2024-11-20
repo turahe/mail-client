@@ -2,7 +2,6 @@
 
 namespace Turahe\MailClient\Client;
 
-use Turahe\Core\OAuth\AccessTokenProvider;
 use Turahe\MailClient\Client\Contracts\Connectable;
 use Turahe\MailClient\Client\Exceptions\ConnectionErrorException;
 use Turahe\MailClient\Client\Gmail\ImapClient as GmailImapClient;

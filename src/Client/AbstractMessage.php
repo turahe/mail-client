@@ -3,7 +3,6 @@
 namespace Turahe\MailClient\Client;
 
 use Closure;
-use Turahe\Core\AbstractMask;
 use Turahe\MailClient\Client\Contracts\MessageInterface;
 
 abstract class AbstractMessage extends AbstractMask implements MessageInterface
