@@ -33,6 +33,8 @@ class EmailAccount extends Model
     use HasUserStamps;
     use SoftDeletes;
 
+    protected $table = 'email_accounts';
+
     /**
      * Indicates the primary meta key for user.
      */
