@@ -7,20 +7,18 @@
             "email": "wachid@outlook.com"
         }
     ],
-    "repositories": [
-        {
-            "url": "https://github.com/turahe/core.git",
-            "type": "git"
-        }
-    ],
+    "repositories": [{
+        "type": "composer",
+        "url": "https://packagist.wach.id"
+    }],
     "license": "proprietary",
     "require": {
-        "php": "^8.3",
+        "php": "^8.2",
         "ext-pdo": "*",
         "ddeboer/imap": "^1.19",
         "kub-at/php-simple-html-dom-parser": "^1.9",
         "pelago/emogrifier": "^7.2.0",
-        "turahe/core": "dev-master",
+        "turahe/core": "^1.0",
         "turahe/media": "^1.0",
         "willdurand/email-reply-parser": "^2.10",
         "zbateson/mail-mime-parser": "^3.0.3"
