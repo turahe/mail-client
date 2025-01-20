@@ -6,20 +6,34 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
+use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Turahe\MailClient\Enums\ConnectionType;
-use Turahe\MailClient\Tests\Models\EmailAccount;
+use Turahe\MailClient\Models\EmailAccount;
+use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
 use Turahe\MailClient\Tests\TestCase;
 
 class EmailAccountTest extends TestCase
 {
     use WithFaker;
 
+    protected $testModel;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->testModel = UserFactory::new()->createOne();
+
+    }
+
     #[Test]
     public function it_can_list_all_email_accounts(): void
     {
 
-        EmailAccount::factory(13)->create();
+        EmailAccountFactory::new()->count(13)->create([
+            'model_id' => $this->testModel->getKey(),
+            'model_type' => $this->testModel->getMorphClass(),
+        ]);
 
         $this->assertInstanceOf(Collection::class, EmailAccount::all());
         $this->assertCount(13, EmailAccount::all()); // +1 in the TestCase
@@ -28,7 +42,10 @@ class EmailAccountTest extends TestCase
     #[Test]
     public function it_can_delete_the_email_account(): void
     {
-        $email = EmailAccount::factory()->create();
+        $email = EmailAccountFactory::new()->create([
+            'model_id' => $this->testModel->getKey(),
+            'model_type' => $this->testModel->getMorphClass(),
+        ]);
 
         $deleted = $email->delete();
 
@@ -40,7 +57,10 @@ class EmailAccountTest extends TestCase
     public function it_can_update_the_email_account(): void
     {
 
-        $email = EmailAccount::factory()->create();
+        $email = EmailAccountFactory::new()->create([
+            'model_id' => $this->testModel->getKey(),
+            'model_type' => $this->testModel->getMorphClass(),
+        ]);
 
         $data = [
             'email' => $this->faker->email,
@@ -60,6 +80,9 @@ class EmailAccountTest extends TestCase
     public function it_can_create_a_email_account(): void
     {
         $data = [
+
+            'model_id' => $this->testModel->getKey(),
+            'model_type' => $this->testModel->getMorphClass(),
             'email' => $this->faker->email,
             'alias_email' => $this->faker->email,
             'password' => $this->faker->password,
@@ -81,7 +104,7 @@ class EmailAccountTest extends TestCase
             'smtp_encryption' => 'tls',
         ];
 
-        $email = EmailAccount::create($data);
+        $email = \Turahe\MailClient\Models\EmailAccount::create($data);
 
         $this->assertEquals($data['email'], $email->email);
         $this->assertEquals($data['alias_email'], $email->alias_email);

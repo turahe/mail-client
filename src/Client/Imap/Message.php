@@ -3,15 +3,15 @@
 namespace Turahe\MailClient\Client\Imap;
 
 use Illuminate\Support\Carbon;
-//use Turahe\Core\Common\Mail\Headers\AddressHeader;
-//use Turahe\Core\Common\Mail\Headers\HeadersCollection;
+// use Turahe\Core\Common\Mail\Headers\AddressHeader;
+// use Turahe\Core\Common\Mail\Headers\HeadersCollection;
 use Turahe\Core\Mail\Headers\AddressHeader;
 use Turahe\Core\Mail\Headers\HeadersCollection;
 use Turahe\MailClient\Client\AbstractMessage;
 use Turahe\MailClient\Client\FolderIdentifier;
 use ZBateson\MailMimeParser\MailMimeParser;
 
-//use ZBateson\MailMimeParser\MailMimeParser;
+// use ZBateson\MailMimeParser\MailMimeParser;
 
 class Message extends AbstractMessage
 {

@@ -4,7 +4,7 @@ namespace Turahe\MailClient\Client\Outlook;
 
 use GuzzleHttp\Exception\ClientException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-//use Microsoft\Graph\Model\MailFolder;
+// use Microsoft\Graph\Model\MailFolder;
 use Microsoft\Graph\Generated\Models\MailFolder;
 use Microsoft\Graph\Generated\Models\Message as MessageModel;
 use Turahe\Core\Facades\MsGraph as Api;

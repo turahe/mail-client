@@ -108,6 +108,9 @@ class EmailAccount extends Model
         'smtp_server',
         'smtp_port',
         'smtp_encryption',
+
+        'model_id',
+        'model_type',
     ];
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Turahe\MailClient\Client\Imap;
 
-//use App\MailClient\Client\Imap\Illuminate;
+// use App\MailClient\Client\Imap\Illuminate;
 use Illuminate\Mail\Mailer;
 use Illuminate\Support\Str;
 use Symfony\Component\Mailer\Transport\Dsn;

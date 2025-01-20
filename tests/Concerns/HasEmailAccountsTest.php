@@ -9,11 +9,11 @@ use Turahe\MailClient\Models\EmailAccount;
 use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
 use Turahe\MailClient\Tests\TestCase;
 
-class HasEmailTest extends TestCase
+class HasEmailAccountsTest extends TestCase
 {
     protected $testModel;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->testModel = UserFactory::new()->createOne();
@@ -58,5 +58,4 @@ class HasEmailTest extends TestCase
         $this->assertTrue($deleted);
 
     }
-
 }

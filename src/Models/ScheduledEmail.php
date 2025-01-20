@@ -15,6 +15,8 @@ class ScheduledEmail extends Model
     use HasMedia,
         SendsScheduledEmail;
 
+    protected $table = 'scheduled_emails';
+
     /**
      * The number of max retries to retry failed emails to sent.
      */

@@ -5,7 +5,7 @@ namespace Turahe\MailClient\Tests\Factories;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Turahe\MailClient\Enums\ConnectionType;
-use Turahe\MailClient\Tests\Models\EmailAccount;
+use Turahe\MailClient\Models\EmailAccount;
 
 class EmailAccountFactory extends Factory
 {

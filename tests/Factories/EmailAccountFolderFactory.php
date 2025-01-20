@@ -3,7 +3,7 @@
 namespace Turahe\MailClient\Tests\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Turahe\MailClient\Tests\Models\EmailAccountFolder;
+use Turahe\MailClient\Models\EmailAccountFolder;
 
 class EmailAccountFolderFactory extends Factory
 {

@@ -4,9 +4,11 @@ namespace Turahe\MailClient\Tests\Unit;
 
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
+use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
-use Turahe\MailClient\Tests\Models\EmailAccount;
-use Turahe\MailClient\Tests\Models\EmailAccountFolder;
+use Turahe\MailClient\Models\EmailAccountFolder;
+use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
+use Turahe\MailClient\Tests\Factories\EmailAccountFolderFactory;
 use Turahe\MailClient\Tests\TestCase;
 
 class EmailAccountFolderTest extends TestCase
@@ -15,17 +17,23 @@ class EmailAccountFolderTest extends TestCase
 
     protected $emailAccount;
 
-    public function setUp(): void
+    protected $testModel;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->emailAccount = EmailAccount::factory()->create();
+        $this->testModel = UserFactory::new()->createOne();
+        $this->emailAccount = EmailAccountFactory::new()->create([
+            'model_id' => $this->testModel->getKey(),
+            'model_type' => $this->testModel->getMorphClass(),
+        ]);
     }
 
     #[Test]
     public function it_can_list_all_email_account_folder_folders(): void
     {
 
-        EmailAccountFolder::factory(13)->create([
+        EmailAccountFolderFactory::new()->count(13)->create([
             'email_account_id' => $this->emailAccount->getKey(),
         ]);
 
@@ -36,7 +44,7 @@ class EmailAccountFolderTest extends TestCase
     #[Test]
     public function it_can_delete_the_email_account_folder(): void
     {
-        $email = EmailAccountFolder::factory()->create([
+        $email = EmailAccountFolderFactory::new()->create([
             'email_account_id' => $this->emailAccount->getKey(),
         ]);
 
@@ -50,7 +58,7 @@ class EmailAccountFolderTest extends TestCase
     public function it_can_update_the_email_account_folder(): void
     {
 
-        $email = EmailAccountFolder::factory()->create([
+        $email = EmailAccountFolderFactory::new()->create([
             'email_account_id' => $this->emailAccount->getKey(),
         ]);
 

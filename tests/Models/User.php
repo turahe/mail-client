@@ -2,8 +2,9 @@
 
 namespace Turahe\MailClient\Tests\Models;
 
-use Turahe\MailClient\Concerns\HasEmails;
+use Turahe\MailClient\Concerns\HasEmailAccounts;
 
-class User extends \Illuminate\Foundation\Auth\User {
-    use HasEmails;
+class User extends \Illuminate\Foundation\Auth\User
+{
+    use HasEmailAccounts;
 }
