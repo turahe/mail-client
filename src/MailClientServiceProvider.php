@@ -14,7 +14,7 @@ class MailClientServiceProvider extends ServiceProvider
         //        $this->mergeConfigFrom(__DIR__.'./../config/mail-client.php', 'mail-client.php');
 
         if ($this->app instanceof \Illuminate\Foundation\Application) {
-            $databasePath = __DIR__.'./../database/migrations';
+            $databasePath = __DIR__.'/../database/migrations';
             $this->loadMigrationsFrom($databasePath);
 
             $this->publishes(

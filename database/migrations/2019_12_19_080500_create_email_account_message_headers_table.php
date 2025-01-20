@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_message_headers', function (Blueprint $table) {
-            $table->ulid('id');
+            $table->ulid('id')->primary();
             $table->string('name');
             $table->text('value')->nullable();
             $table->foreignId('message_id')->constrained('email_account_messages')->cascadeOnDelete();

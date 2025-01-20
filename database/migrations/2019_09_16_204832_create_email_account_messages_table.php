@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_messages', function (Blueprint $table) {
-            $table->ulid('id');
+            $table->ulid('id')->primary();
             $table->foreignId('email_account_id')->constrained('email_accounts');
             $table->string('remote_id')->index()->comment('Remote Message Identifier (uuid, id)');
 

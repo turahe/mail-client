@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_folders', function (Blueprint $table) {
-            $table->ulid('id');
+            $table->ulid('id')->primary();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->foreignId('email_account_id')->constrained('email_accounts');
             $table->string('remote_id')->nullable()

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('scheduled_emails', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
             $table->string('subject');
             $table->mediumText('html_body');
             $table->text('to');

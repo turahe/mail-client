@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('predefined_mail_templates', function (Blueprint $table) {
-            $table->ulid('id');
+            $table->ulid('id')->primary();
             $table->string('name')->unique();
             $table->string('subject');
             $table->text('body');

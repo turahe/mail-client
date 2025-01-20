@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_accounts', function (Blueprint $table) {
-            $table->ulid('id');
+            $table->ulid('id')->primary();
             $table->string('email')->unique();
             $table->string('alias_email')->nullable();
             $table->ulidMorphs('model');
