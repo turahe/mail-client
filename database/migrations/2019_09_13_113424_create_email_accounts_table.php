@@ -16,15 +16,15 @@ return new class extends Migration
             $table->ulid('id');
             $table->string('email')->unique();
             $table->string('alias_email')->nullable();
-            $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->string('connection_type');
+            $table->ulidMorphs('model');
+            $table->enum('connection_type', array_column(\Turahe\MailClient\Enums\ConnectionType::cases(), 'value'))->nullable();
             $table->unsignedBigInteger('access_token_id')->nullable();
             $table->unsignedBigInteger('sent_folder_id')->nullable();
             $table->unsignedBigInteger('trash_folder_id')->nullable();
             $table->boolean('create_contact')
                 ->default(false)
                 ->comment('Whether to create contact if the message sender does not exists.');
-            $table->dateTime('initial_sync_from');
+            $table->dateTime('initial_sync_from')->nullable();
             $table->dateTime('last_sync_at')->nullable();
             $table->string('sync_state', 30)->default(SyncState::Enabled->value);
             $table->text('sync_state_comment')->nullable();

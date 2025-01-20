@@ -2,9 +2,12 @@
 
 namespace Turahe\MailClient\Concerns;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Turahe\MailClient\Criteria\EmailAccountsForUserCriteria;
+use Turahe\MailClient\Models\EmailAccount;
 
 trait HasEmails
 {
@@ -15,6 +18,30 @@ trait HasEmails
     {
         static::deleted(function (Model $model) {
             $model->scheduledEmails()->delete();
+            $model->emails()->delete();
+        });
+    }
+
+    public function setEmail(string $email): EmailAccount
+    {
+        return $this->emails()->create([
+            'email' => $email,
+        ]);
+    }
+
+    public function emails(): MorphMany
+    {
+        return $this->morphMany(EmailAccount::class, 'model');
+
+    }
+
+    /**
+     * Scope a query to include records by phone.
+     */
+    public function scopeByEmail(Builder $query, string $email): void
+    {
+        $query->whereHas('emails', function ($query) use ($email) {
+            return $query->where('email', $email);
         });
     }
 
@@ -35,7 +62,7 @@ trait HasEmails
     /**
      * Get all of the emails for the model.
      */
-    public function emails(): MorphToMany
+    public function messages(): MorphToMany
     {
         return $this->morphToMany(
             \Turahe\MailClient\Models\EmailAccountMessage::class,
