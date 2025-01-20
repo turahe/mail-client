@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('message_links_clicks', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignId('message_id')->constrained('email_account_messages')->cascadeOnDelete();
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'message_id')->constrained('email_account_messages')->cascadeOnDelete();
             $table->text('url')->nullable();
             $table->integer('total')->default(1);
 

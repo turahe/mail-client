@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->string('name');
             $table->text('value')->nullable();
-            $table->foreignId('message_id')->constrained('email_account_messages')->cascadeOnDelete();
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'message_id')->constrained('email_account_messages')->cascadeOnDelete();
             $table->string('header_type');
         });
     }

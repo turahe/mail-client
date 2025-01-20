@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('subject');
             $table->text('body');
             $table->boolean('is_shared')->default(true);
-            $table->foreignId('user_id')->nullable()->comment('Owner')->constrained('users');
 
             $table->userstamps();
             $table->softUserstamps();

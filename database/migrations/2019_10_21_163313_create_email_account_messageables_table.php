@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_messageables', function (Blueprint $table) {
-            $table->foreignId('message_id')->constrained('email_account_messages');
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'message_id')->constrained('email_account_messages');
             $table->morphs('messageable', 'email_account_messageables_index');
             $table->primary(
                 ['message_id', 'messageable_id', 'messageable_type'],

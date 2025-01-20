@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_message_addresses', function (Blueprint $table) {
-            $table->foreignId('message_id')->constrained('email_account_messages')->cascadeOnDelete();
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'message_id')->constrained('email_account_messages')->cascadeOnDelete();
             $table->string('address')->index()->nullable(); // For drafts without address
             $table->string('name')->index()->nullable();
             $table->string('address_type')->index();

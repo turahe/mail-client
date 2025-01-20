@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('email_account_messages', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignId('email_account_id')->constrained('email_accounts');
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccount::class, 'email_account_id')->constrained('email_accounts');
             $table->string('remote_id')->index()->comment('Remote Message Identifier (uuid, id)');
 
             // https://stackoverflow.com/questions/30079128/maximum-internet-email-message-id-length

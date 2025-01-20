@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_account_message_folders', function (Blueprint $table) {
-            $table->foreignId('message_id')->constrained('email_account_messages')->cascadeOnDelete();
-            $table->foreignId('folder_id')->constrained('email_account_folders')->cascadeOnDelete();
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'message_id')->constrained('email_account_messages')->cascadeOnDelete();
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountFolder::class, 'folder_id')->constrained('email_account_folders')->cascadeOnDelete();
         });
     }
 

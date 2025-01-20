@@ -25,9 +25,8 @@ return new class extends Migration
             $table->text('fail_reason')->nullable();
             $table->dateTime('retry_after')->index()->nullable();
             $table->unsignedInteger('retries')->index()->default(0);
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('email_account_id')->nullable()->constrained('email_accounts');
-            $table->foreignId('related_message_id')->nullable()->constrained('email_account_messages');  // for reply and forward
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccount::class, 'email_account_id')->nullable()->constrained('email_accounts');
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'related_message_id')->nullable()->constrained('email_account_messages');  // for reply and forward
             $table->dateTime('sent_at')->nullable();
             $table->dateTime('scheduled_at')->index();
 

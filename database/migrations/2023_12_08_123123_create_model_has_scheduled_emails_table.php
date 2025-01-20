@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('model_has_scheduled_emails', function (Blueprint $table) {
-            $table->foreignId('scheduled_email_id')->constrained('scheduled_emails')->cascadeOnDelete();
+            $table->foreignIdFor(\Turahe\MailClient\Models\ScheduledEmail::class, 'scheduled_email_id')->constrained('scheduled_emails')->cascadeOnDelete();
 
             $table->ulidMorphs('model');
 

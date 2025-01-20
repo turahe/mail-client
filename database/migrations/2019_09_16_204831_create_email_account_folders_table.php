@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('email_account_folders', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->foreignId('email_account_id')->constrained('email_accounts');
+            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccount::class, 'email_account_id')->constrained('email_accounts');
             $table->string('remote_id')->nullable()
                 ->comment('API ID, uidvalidity etc...');
             $table->boolean('support_move')->default(true);
