@@ -1,17 +1,13 @@
 {
     "name": "turahe/mailclient",
     "description": "",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Nur Wachid",
             "email": "wachid@outlook.com"
         }
     ],
-    "repositories": [{
-        "type": "composer",
-        "url": "https://packagist.wach.id"
-    }],
-    "license": "proprietary",
     "require": {
         "php": "^8.2",
         "ext-pdo": "*",
@@ -26,16 +22,15 @@
     "require-dev": {
         "laravel/pint": "^1.17",
         "mockery/mockery": "^1.6",
-        "orchestra/testbench": "^9.4"
+        "orchestra/testbench": "^9.4 || ^10.0 || ^11.0"
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Turahe\\MailClient\\MailClientServiceProvider"
-            ],
-            "aliases": {}
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.x-api.app"
         }
-    },
+    ],
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "Turahe\\MailClient\\": "src/"
@@ -46,13 +41,19 @@
             "Turahe\\MailClient\\Tests\\": "tests/"
         }
     },
-
-    "minimum-stability": "stable",
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
             "tbachert/spi": true
         },
         "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "aliases": {},
+            "providers": [
+                "Turahe\\MailClient\\MailClientServiceProvider"
+            ]
+        }
     }
 }
