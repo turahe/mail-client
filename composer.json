@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-pdo": "*",
         "ddeboer/imap": "^1.19",
         "kub-at/php-simple-html-dom-parser": "^1.9",
