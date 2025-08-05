@@ -38,12 +38,12 @@ class EmailAccount extends Model
     /**
      * Indicates the primary meta key for user.
      */
-    const PRIMARY_META_KEY = 'primary-email-account';
+    public const PRIMARY_META_KEY = 'primary-email-account';
 
     /**
      * The default shared account from header type
      */
-    const DEFAULT_FROM_NAME_HEADER = '{agent} from {company}';
+    public const DEFAULT_FROM_NAME_HEADER = '{agent} from {company}';
 
     /**
      * The email account client instance.
@@ -52,8 +52,6 @@ class EmailAccount extends Model
 
     /**
      * The attributes that should be hidden for arrays.
-     *
-     * @var array
      */
     protected $hidden = [
         'password',
@@ -63,8 +61,6 @@ class EmailAccount extends Model
 
     /**
      * The attributes that should be cast.
-     *
-     * @var array<string, string>
      */
     protected $casts = [
         'create_contact' => 'boolean',
@@ -85,8 +81,6 @@ class EmailAccount extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
      */
     protected $fillable = [
         'email',
@@ -152,7 +146,7 @@ class EmailAccount extends Model
      */
     public function isInitialSyncPerformed(): bool
     {
-        return ! empty($this->last_sync_at);
+        return !empty($this->last_sync_at);
     }
 
     /**
@@ -160,7 +154,7 @@ class EmailAccount extends Model
      */
     public function isSyncOnHold(): bool
     {
-        if (! $resumeDate = $this->getSyncResumeDate()) {
+        if (!$resumeDate = $this->getSyncResumeDate()) {
             return false;
         }
 
@@ -281,7 +275,7 @@ class EmailAccount extends Model
      */
     public function isPersonal(): bool
     {
-        return ! $this->isShared();
+        return !$this->isShared();
     }
 
     /**
@@ -299,9 +293,9 @@ class EmailAccount extends Model
     /**
      * Check whether the account is primary account for the given or current user.
      */
-    public function isPrimary($user = null): bool
+    public function isPrimary(?User $user = null): bool
     {
-        $user = $user ?? auth()->user();
+        $user ??= auth()->user();
 
         return (int) $user->getSetting(self::PRIMARY_META_KEY) === (int) $this->id;
     }
@@ -309,7 +303,7 @@ class EmailAccount extends Model
     /**
      * Mark the account as primary for the given user.
      */
-    public function markAsPrimary($user): static
+    public function markAsPrimary(User $user): static
     {
         $user->getSetting(self::PRIMARY_META_KEY, $this->id);
 
@@ -319,7 +313,7 @@ class EmailAccount extends Model
     /**
      * Unmark the account as primary for the given user.
      */
-    public static function unmarkAsPrimary($user): void
+    public static function unmarkAsPrimary(User $user): void
     {
         $user->getSetting(self::PRIMARY_META_KEY);
     }
@@ -340,7 +334,7 @@ class EmailAccount extends Model
     protected function fromNameHeader(): Attribute
     {
         return Attribute::get(
-            fn () => $this->getMeta('from_name_header') ?: static::DEFAULT_FROM_NAME_HEADER
+            fn () => $this->getMeta('from_name_header') ?: self::DEFAULT_FROM_NAME_HEADER
         );
     }
 
@@ -386,7 +380,7 @@ class EmailAccount extends Model
      */
     public function canSendEmail(): bool
     {
-        return ! ($this->requires_auth || $this->isSyncStopped());
+        return !($this->requires_auth || $this->isSyncStopped());
     }
 
     /**
@@ -480,7 +474,7 @@ class EmailAccount extends Model
      */
     public function setAuthRequired(bool $value = true): static
     {
-        if (! is_null($this->oAuthAccount)) {
+        if (!is_null($this->oAuthAccount)) {
             $this->oAuthAccount->setAuthRequired($value);
         }
 

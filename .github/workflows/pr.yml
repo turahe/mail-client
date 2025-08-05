@@ -1,0 +1,123 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php: [8.3, 8.4]
+        laravel: [11.*, 12.*]
+        dependency-version: [prefer-stable]
+        include:
+          - laravel: 11.*
+            testbench: 9.*
+          - laravel: 12.*
+            testbench: 10.*
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: dom, curl, libxml-openssl-1.1.1, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, iconv, fileinfo
+        coverage: none
+
+    - name: Install dependencies
+      run: |
+        composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+        composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+
+    - name: Execute tests
+      run: vendor/bin/phpunit
+
+    - name: Execute tests (with coverage)
+      run: vendor/bin/phpunit --coverage-clover=coverage.xml
+      if: matrix.php == '8.4' && matrix.laravel == '12.*'
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+      if: matrix.php == '8.4' && matrix.laravel == '12.*'
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+        extensions: dom, curl, libxml-openssl-1.1.1, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, iconv, fileinfo
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-interaction
+
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --memory-limit=2G
+
+    - name: Run PHP CS Fixer
+      run: vendor/bin/php-cs-fixer fix --dry-run --diff
+
+  security:
+    name: Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+        extensions: dom, curl, libxml-openssl-1.1.1, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, iconv, fileinfo
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-interaction
+
+    - name: Run Security Check
+      run: vendor/bin/security-checker security:check composer.lock
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+        extensions: dom, curl, libxml-openssl-1.1.1, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, iconv, fileinfo
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-interaction
+
+    - name: Validate composer.json
+      run: composer validate --strict
+
+    - name: Check for security vulnerabilities
+      run: composer audit
+
+    - name: Check code style
+      run: composer check-style 

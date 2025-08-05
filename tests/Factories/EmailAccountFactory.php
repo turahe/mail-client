@@ -33,6 +33,31 @@ class EmailAccountFactory extends Factory
             'smtp_server' => $this->faker->domainName,
             'smtp_port' => 123,
             'smtp_encryption' => 'tls',
+            // polymorphic relationship
+            'model_id' => null,
+            'model_type' => null,
         ];
+    }
+
+    /**
+     * Indicate that the account belongs to a user.
+     */
+    public function forUser($user): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'model_id' => $user->id,
+            'model_type' => $user->getMorphClass(),
+        ]);
+    }
+
+    /**
+     * Indicate that the account is shared (no user).
+     */
+    public function shared(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'model_id' => null,
+            'model_type' => null,
+        ]);
     }
 }

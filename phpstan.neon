@@ -1,0 +1,19 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - tests/Factories
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::getMeta\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::setMeta\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::removeMeta\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::criteria\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::factory\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::usesUlids\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::usesSoftDeletes\(\)#'
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::usesUserStamps\(\)#'
+    tmpDir: build/phpstan 
