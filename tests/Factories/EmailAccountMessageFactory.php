@@ -13,25 +13,17 @@ class EmailAccountMessageFactory extends Factory
     public function definition()
     {
         return [
-            'email_account_id' => 1,
+            'email_account_id' => '01h0000000000000000000',
             'remote_id' => $this->faker->unique()->uuid,
-            'subject' => $this->faker->sentence,
-            'body' => $this->faker->paragraph,
-            'from_address' => $this->faker->email,
-            'from_name' => $this->faker->name,
-            'to_addresses' => json_encode([$this->faker->email]),
-            'cc_addresses' => json_encode([]),
-            'bcc_addresses' => json_encode([]),
-            'reply_to_addresses' => json_encode([]),
-            'received_at' => Carbon::now(),
-            'is_read' => false,
-            'is_flagged' => false,
-            'has_attachments' => false,
-            'size' => $this->faker->numberBetween(1000, 100000),
             'message_id' => $this->faker->unique()->uuid,
-            'in_reply_to' => null,
-            'references' => json_encode([]),
-            'headers' => json_encode([]),
+            'subject' => $this->faker->sentence,
+            'html_body' => '<p>' . $this->faker->paragraph . '</p>',
+            'text_body' => $this->faker->paragraph,
+            'is_read' => false,
+            'is_draft' => false,
+            'date' => Carbon::now(),
+            'is_sent_via_app' => false,
+            'hash' => hash('sha256', $this->faker->text),
         ];
     }
 
@@ -56,22 +48,32 @@ class EmailAccountMessageFactory extends Factory
     }
 
     /**
-     * Indicate that the message is flagged.
+     * Indicate that the message is a draft.
      */
-    public function flagged(): static
+    public function draft(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_flagged' => true,
+            'is_draft' => true,
         ]);
     }
 
     /**
-     * Indicate that the message has attachments.
+     * Indicate that the message was sent via app.
      */
-    public function withAttachments(): static
+    public function sentViaApp(): static
     {
         return $this->state(fn (array $attributes) => [
-            'has_attachments' => true,
+            'is_sent_via_app' => true,
+        ]);
+    }
+
+    /**
+     * Set a specific date for the message.
+     */
+    public function withDate($date): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'date' => $date,
         ]);
     }
 } 

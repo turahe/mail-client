@@ -3,10 +3,22 @@
 namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EmailAccountMessageHeader extends Model
 {
+    use HasFactory, HasUlids;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Turahe\MailClient\Tests\Factories\EmailAccountMessageHeaderFactory::new();
+    }
+
     /**
      * Indicates if the model has timestamps
      *
@@ -27,7 +39,7 @@ class EmailAccountMessageHeader extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'message_id' => 'int',
+        'message_id' => 'string',
     ];
 
     /**

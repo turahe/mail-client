@@ -138,7 +138,7 @@ class EmailAccountFolder extends Model
     /**
      * Count read or unread messages for a given folder
      */
-    protected function countReadOrUnreadMessages(int $folderId, string $scope): int
+    protected function countReadOrUnreadMessages(string $folderId, string $scope): int
     {
         return (int) static::select('id')
             ->withCount(['messages' => function ($query) use ($scope) {

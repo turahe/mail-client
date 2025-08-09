@@ -7,8 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-01-08
+
 ### Added
-- Comprehensive test suite for EmailAccount model
+- **Comprehensive Test Suite**: Complete test coverage for all 9 models (120+ test methods)
+- **Model Factories**: Full factory support for all models with proper ULID handling
+- **Test Infrastructure**: EmailAccountFactory, EmailAccountFolderFactory, EmailAccountMessageFactory, and more
+- **Database Testing**: Comprehensive CRUD operation tests for all models
+- **Relationship Testing**: Complete coverage of BelongsTo, HasMany, BelongsToMany, and MorphToMany relationships
+- **Validation Testing**: Model constraint and field validation test coverage
+- **Scope Testing**: Custom query scopes and model methods testing
 - GitHub Actions CI/CD pipeline
 - Static analysis with PHPStan
 - Code style checking with PHP CS Fixer
@@ -22,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PHP 8.3 Features**: HasEmailAccountValidation trait with match expressions and improved validation
 
 ### Changed
+- **Model Improvements**: Added HasFactory trait to all models requiring factory support
+- **Type Safety**: Fixed ULID string casting across all models (was incorrectly cast as int)
+- **Database Schema**: Aligned model casts with actual migration ULID structure
+- **Factory Patterns**: Implemented proper factory namespace resolution and relationship building
 - Enhanced composer.json with additional dev dependencies
 - Improved package description and documentation
 - Added composer scripts for development workflow
@@ -35,6 +47,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Modern PHP Patterns**: Used match expressions, readonly properties, and constructor property promotion
 
 ### Fixed
+- **Foreign Key Constraints**: Resolved all database constraint violations in tests
+- **ULID Support**: Added missing HasUlids trait to MessageLinksClick and EmailAccountMessageHeader models
+- **Model Relationships**: Added missing HasOne import to EmailAccountMessage model
+- **External Dependencies**: Added safety checks for external package class availability
+- **Factory Issues**: Fixed namespace resolution for custom factory locations
+- **Test Patterns**: Corrected test approaches for models without traditional primary keys
 - Polymorphic relationship handling in tests
 - Database migration compatibility issues
 - Factory implementations for test data

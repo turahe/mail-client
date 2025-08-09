@@ -9,25 +9,23 @@
         }
     ],
     "require": {
-        "php": "^8.3|^8.4",
+        "php": "^8.4",
         "ext-pdo": "*",
         "ddeboer/imap": "^1.19",
         "kub-at/php-simple-html-dom-parser": "^1.9",
         "pelago/emogrifier": "^7.2.0",
         "turahe/core": "^1.0",
-        "turahe/media": "^1.0",
+        "turahe/media": "^3.0",
         "willdurand/email-reply-parser": "^2.10",
         "zbateson/mail-mime-parser": "^3.0.3"
     },
     "require-dev": {
         "laravel/pint": "^1.17",
         "mockery/mockery": "^1.6",
-        "orchestra/testbench": "^10.0 || ^11.0",
-        "phpunit/phpunit": "^10.0",
+        "orchestra/testbench": "^10.0",
         "phpstan/phpstan": "^1.10",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "enlightn/security-checker": "^1.0",
-        "humbug/box": "^4.0"
+        "enlightn/security-checker": "^1.0"
     },
     "minimum-stability": "stable",
     "autoload": {

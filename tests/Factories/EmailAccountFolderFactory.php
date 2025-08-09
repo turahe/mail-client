@@ -12,11 +12,11 @@ class EmailAccountFolderFactory extends Factory
     public function definition(): array
     {
         return [
-            //            'parent_id' => '',
+            'parent_id' => null,
             'name' => 'INBOX',
             'display_name' => 'inbox',
-            'remote_id' => 1,
-            //            'email_account_id' => '',
+            'remote_id' => $this->faker->uuid,
+            'email_account_id' => '01h0000000000000000000',
             'syncable' => true,
             'selectable' => true,
             'type' => 'folder',

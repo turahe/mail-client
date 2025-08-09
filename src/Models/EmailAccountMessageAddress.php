@@ -2,10 +2,21 @@
 
 namespace Turahe\MailClient\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class EmailAccountMessageAddress extends Model
 {
+    use HasFactory;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Turahe\MailClient\Tests\Factories\EmailAccountMessageAddressFactory::new();
+    }
+
     /**
      * Indicates if the model has timestamps
      *
@@ -26,6 +37,6 @@ class EmailAccountMessageAddress extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'message_id' => 'int',
+        'message_id' => 'string',
     ];
 }
