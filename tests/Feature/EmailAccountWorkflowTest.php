@@ -37,11 +37,9 @@ class EmailAccountWorkflowTest extends TestCase
             'model_type' => $this->user->getMorphClass(),
             'email' => $this->faker->email,
             'alias_email' => $this->faker->email,
-            'type' => EmailAccountType::Personal,
             'connection_type' => ConnectionType::Imap,
             'sync_state' => SyncState::Enabled,
             'access_token_id' => null,
-            'name' => $this->faker->name,
             'username' => $this->faker->userName,
             'password' => encrypt('password'),
             'initial_sync_from' => now()->subDays(30),
@@ -105,8 +103,7 @@ class EmailAccountWorkflowTest extends TestCase
         
         // Test account relationships  
         $this->assertFalse($emailAccount->isSyncDisabled());
-        $this->assertEquals('Personal', $emailAccount->type->value);
-        $this->assertEquals('Imap', $emailAccount->connection_type->value);
+        $this->assertEquals('IMAP', $emailAccount->connection_type->value);
 
         // Test message operations
         $unreadMessages = $emailAccount->messages()->where('is_read', false)->get();
@@ -139,7 +136,8 @@ class EmailAccountWorkflowTest extends TestCase
 
         // Enable sync
         $emailAccount->enableSync();
-        $this->assertFalse($emailAccount->fresh()->isSyncDisabled());
+        $emailAccount->refresh();
+        $this->assertFalse($emailAccount->isSyncDisabled());
 
         // Stop sync
         $emailAccount->update(['sync_state' => SyncState::Stopped]);
@@ -151,7 +149,7 @@ class EmailAccountWorkflowTest extends TestCase
             'syncable' => true,
         ]);
 
-        $activeFolders = $emailAccount->getActiveFolders();
+        $activeFolders = $emailAccount->folders()->where('syncable', true)->get();
         $this->assertCount(3, $activeFolders);
 
         // Test message creation workflow

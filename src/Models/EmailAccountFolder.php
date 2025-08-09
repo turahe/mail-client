@@ -39,7 +39,7 @@ class EmailAccountFolder extends Model
             'selectable' => 'boolean',
             'syncable' => 'boolean',
             'support_move' => 'boolean',
-            'parent_id' => 'int',
+            'parent_id' => 'string',
             'email_account_id' => 'string',
         ];
     }

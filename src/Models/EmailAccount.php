@@ -86,7 +86,9 @@ class EmailAccount extends Model
         'email',
         'alias_email',
         'password',
+
         'connection_type',
+        'sync_state',
         'last_sync_at',
         'requires_auth',
         'initial_sync_from',

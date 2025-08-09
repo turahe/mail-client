@@ -214,7 +214,7 @@ class EmailAccountFolderTest extends TestCase
         $this->assertEquals('boolean', $casts['selectable']);
         $this->assertEquals('boolean', $casts['syncable']);
         $this->assertEquals('boolean', $casts['support_move']);
-        $this->assertEquals('int', $casts['parent_id']);
+        $this->assertEquals('string', $casts['parent_id']);
         $this->assertEquals('string', $casts['email_account_id']);
     }
 }
