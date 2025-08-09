@@ -38,6 +38,9 @@ jobs:
         composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
+    - name: Copy PHPUnit configuration
+      run: cp phpunit.xml.dist phpunit.xml
+
     - name: Execute tests (Unit)
       run: vendor/bin/phpunit --testsuite=Unit
 
@@ -72,6 +75,9 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-interaction
 
+    - name: Copy PHPUnit configuration
+      run: cp phpunit.xml.dist phpunit.xml
+
     - name: Run PHPStan
       run: vendor/bin/phpstan analyse --memory-limit=2G
       continue-on-error: true
@@ -97,6 +103,9 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-interaction
 
+    - name: Copy PHPUnit configuration
+      run: cp phpunit.xml.dist phpunit.xml
+
     - name: Run Security Check
       run: composer audit
 
@@ -118,6 +127,9 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-interaction
+
+    - name: Copy PHPUnit configuration
+      run: cp phpunit.xml.dist phpunit.xml
 
     - name: Validate composer.json
       run: composer validate --strict
