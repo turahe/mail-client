@@ -17,6 +17,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.4
+        extensions: dom, curl, libxml-openssl-1.1.1, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd, iconv, fileinfo
+        coverage: none
+
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
@@ -25,15 +32,14 @@ jobs:
       uses: actions/cache@v3
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-php-8.4-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
-          ${{ runner.os }}-php-
+          ${{ runner.os }}-php-8.4-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+      run: |
+        composer require "laravel/framework:12.*" "orchestra/testbench:10.*" --no-interaction --no-update
+        composer install --prefer-dist --no-progress
 
     - name: Run test suite
       run: |
