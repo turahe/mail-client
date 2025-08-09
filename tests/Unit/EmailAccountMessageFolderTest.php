@@ -145,13 +145,6 @@ class EmailAccountMessageFolderTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\Pivot::class, $pivot);
     }
 
-    // Skipped: Database unique constraints not configured for pivot table
-    // In practice, duplicate relationships are prevented at the application level
-    public function test_skipped_duplicate_prevention(): void
-    {
-        $this->markTestSkipped('Duplicate relationship prevention requires database unique constraints');
-    }
-
     #[Test]
     public function it_can_relate_one_message_to_multiple_folders(): void
     {
