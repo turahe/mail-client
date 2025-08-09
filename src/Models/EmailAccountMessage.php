@@ -385,7 +385,7 @@ class EmailAccountMessage extends Model
     public function purge(): void
     {
         foreach (['deals', 'contacts', 'companies', 'folders'] as $relation) {
-            $this->{$relation}()->withTrashedIfUsingSoftDeletes()->detach();
+            $this->{$relation}()->detach();
         }
 
         ScheduledEmail::where('related_message_id', $this->id)

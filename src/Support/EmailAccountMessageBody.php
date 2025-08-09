@@ -101,9 +101,7 @@ class EmailAccountMessageBody
             ->convertCssToVisualAttributes()
             ->renderBodyContent();
 
-        return $this->previewText = Str::clickable(
-            $this->prefixStaleClasses($finalHtml)
-        );
+        return $this->previewText = $this->prefixStaleClasses($finalHtml);
     }
 
     /**

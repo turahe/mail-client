@@ -23,5 +23,14 @@ class MessageLinksClick extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['url'];
+    protected $fillable = ['url', 'message_id'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'message_id' => 'string',
+    ];
 }

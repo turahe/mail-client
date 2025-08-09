@@ -4,18 +4,35 @@ namespace Turahe\MailClient\Tests\Unit;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
+use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Turahe\MailClient\Models\MessageLinksClick;
+use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
+use Turahe\MailClient\Tests\Factories\EmailAccountMessageFactory;
 use Turahe\MailClient\Tests\TestCase;
 
 class MessageLinksClickTest extends TestCase
 {
     use WithFaker;
 
+    protected $testUser;
+    protected $testAccount;
+    protected $testMessage;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->testUser = UserFactory::new()->createOne();
+        $this->testAccount = EmailAccountFactory::new()->forUser($this->testUser)->create();
+        $this->testMessage = EmailAccountMessageFactory::new()->create([
+            'email_account_id' => $this->testAccount->id,
+        ]);
+    }
+
     #[Test]
     public function it_can_list_all_message_link_clicks(): void
     {
-        MessageLinksClick::factory()->count(5)->create();
+        MessageLinksClick::factory()->count(5)->forMessage($this->testMessage)->create();
 
         $this->assertInstanceOf(Collection::class, MessageLinksClick::all());
         $this->assertCount(5, MessageLinksClick::all());
@@ -26,7 +43,7 @@ class MessageLinksClickTest extends TestCase
     {
         $data = [
             'url' => $this->faker->url,
-            'message_id' => 1,
+            'message_id' => $this->testMessage->id,
         ];
 
         $click = MessageLinksClick::create($data);
@@ -41,7 +58,7 @@ class MessageLinksClickTest extends TestCase
     {
         $click = MessageLinksClick::create([
             'url' => 'https://example.com/old',
-            'message_id' => 1,
+            'message_id' => $this->testMessage->id,
         ]);
 
         $newUrl = 'https://example.com/new';
@@ -56,7 +73,7 @@ class MessageLinksClickTest extends TestCase
     {
         $click = MessageLinksClick::create([
             'url' => $this->faker->url,
-            'message_id' => 1,
+            'message_id' => $this->testMessage->id,
         ]);
 
         $deleted = $click->delete();
@@ -68,10 +85,19 @@ class MessageLinksClickTest extends TestCase
     #[Test]
     public function it_has_correct_fillable_attributes(): void
     {
-        $expectedFillable = ['url'];
+        $expectedFillable = ['url', 'message_id'];
 
         $click = new MessageLinksClick();
         $this->assertEquals($expectedFillable, $click->getFillable());
+    }
+
+    #[Test]
+    public function it_casts_attributes_correctly(): void
+    {
+        $click = new MessageLinksClick();
+        $casts = $click->getCasts();
+
+        $this->assertEquals('string', $casts['message_id']);
     }
 
     #[Test]
@@ -102,7 +128,7 @@ class MessageLinksClickTest extends TestCase
         foreach ($urls as $url) {
             $click = MessageLinksClick::create([
                 'url' => $url,
-                'message_id' => 1,
+                'message_id' => $this->testMessage->id,
             ]);
 
             $this->assertEquals($url, $click->url);
@@ -118,12 +144,12 @@ class MessageLinksClickTest extends TestCase
         
         MessageLinksClick::create([
             'url' => $url,
-            'message_id' => 1,
+            'message_id' => $this->testMessage->id,
         ]);
 
         MessageLinksClick::create([
             'url' => 'https://different.com',
-            'message_id' => 1,
+            'message_id' => $this->testMessage->id,
         ]);
 
         $specificClicks = MessageLinksClick::where('url', $url)->get();
@@ -171,7 +197,7 @@ class MessageLinksClickTest extends TestCase
 
         $click = MessageLinksClick::create([
             'url' => $longUrl,
-            'message_id' => 1,
+            'message_id' => $this->testMessage->id,
         ]);
 
         $this->assertEquals($longUrl, $click->url);
