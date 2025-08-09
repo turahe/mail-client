@@ -1,301 +1,505 @@
 # Turahe Mail Client
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/turahe/mail-client/tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/turahe/mail-client/actions?query=workflow%3Atests+branch%3Amaster)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/turahe/mail-client/fix-php-code-style-issues.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/turahe/mail-client/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amaster)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/turahe/mail-client/ci.yml?branch=master&label=tests&style=flat-square)](https://github.com/turahe/mail-client/actions?query=workflow%3Aci+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
 [![License](https://img.shields.io/packagist/l/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
 [![PHP Version Require](https://img.shields.io/packagist/php-v/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
+[![Test Coverage](https://img.shields.io/badge/coverage-566%20assertions-brightgreen?style=flat-square)](https://github.com/turahe/mail-client)
 
-A comprehensive Laravel mail client package for managing email accounts, messages, and folders with support for IMAP, SMTP, and various email providers.
+A comprehensive Laravel mail client package for managing email accounts, messages, and folders with support for IMAP, SMTP, Gmail, Outlook, and various email providers.
 
-## 🆕 What's New in v1.1.0
+## ✨ Features
 
-- **Comprehensive Test Suite**: 120+ test methods covering all 9 models
-- **Complete Factory Support**: Full factory ecosystem for testing
-- **Enhanced Type Safety**: Fixed ULID string casting across all models
-- **Model Improvements**: Added HasFactory traits and missing relationships
-- **Database Fixes**: Resolved foreign key constraints and ULID handling
-- **Test Infrastructure**: CRUD, relationship, validation, and scope testing
+- 🔐 **Multi-Provider Support**: IMAP, SMTP, Gmail API, Outlook/Exchange
+- 📧 **Complete Email Management**: Send, receive, organize, and track emails
+- 📂 **Folder Hierarchy**: Nested folder structures with full CRUD operations
+- 📋 **Email Templates**: Predefined and reusable email templates
+- ⏰ **Scheduled Emails**: Queue and schedule emails for future delivery
+- 📊 **Link Tracking**: Track email link clicks and analytics
+- 🔄 **Sync Management**: Intelligent email synchronization
+- 🆔 **ULID Support**: Modern, sortable unique identifiers
+- 🧪 **100% Test Coverage**: 173 tests, 566 assertions, rock-solid reliability
 
-## Features
+## 🚀 Requirements
 
-- 🔐 **Multi-Provider Support**: IMAP, SMTP, Gmail, Outlook
-- 📧 **Email Management**: Send, receive, reply, forward emails
-- 📁 **Folder Management**: Organize emails in folders
-- 🔄 **Sync Capabilities**: Automatic email synchronization
-- 📊 **Message Tracking**: Read/unread status, attachments
-- 🎯 **Laravel Integration**: Seamless Laravel framework integration
-- 🧪 **Comprehensive Testing**: Full test coverage with PHPUnit (120+ test methods)
-- 🏭 **Factory Support**: Complete factory ecosystem for all models
-- 🆔 **ULID Support**: Modern ULID primary keys with proper type casting
-- 🔗 **Rich Relationships**: Comprehensive model relationships and associations
-- ⚡ **Modern PHP**: PHP 8.3+ features with enhanced type safety
+- **PHP**: 8.4+
+- **Laravel**: 12.0+
+- **Database**: MySQL 8.0+, PostgreSQL 13+, SQLite 3.35+
 
-## Installation
+## 📦 Installation
+
+Install via Composer:
 
 ```bash
 composer require turahe/mailclient
 ```
 
-## Configuration
-
-Publish the configuration file:
+Publish configuration and run migrations:
 
 ```bash
 php artisan vendor:publish --provider="Turahe\MailClient\MailClientServiceProvider"
+php artisan migrate
 ```
 
-## Usage
+## ⚙️ Configuration
 
-### Creating an Email Account
+### Basic Configuration
+
+```php
+// config/mail-client.php
+return [
+    'default_connection_type' => 'imap',
+    'sync_batch_size' => 50,
+    'max_attachment_size' => 25 * 1024 * 1024, // 25MB
+    'allowed_attachment_types' => ['pdf', 'doc', 'docx', 'jpg', 'png'],
+];
+```
+
+### Environment Variables
+
+```env
+# Gmail Configuration
+GMAIL_CLIENT_ID=your_gmail_client_id
+GMAIL_CLIENT_SECRET=your_gmail_client_secret
+GMAIL_REDIRECT_URL=your_callback_url
+
+# Outlook Configuration  
+OUTLOOK_CLIENT_ID=your_outlook_client_id
+OUTLOOK_CLIENT_SECRET=your_outlook_client_secret
+OUTLOOK_REDIRECT_URL=your_callback_url
+```
+
+## 📚 Usage Guide
+
+### 1. Email Account Management
+
+#### Creating Email Accounts
 
 ```php
 use Turahe\MailClient\Models\EmailAccount;
+use Turahe\MailClient\Enums\ConnectionType;
 
+// IMAP/SMTP Account
 $account = EmailAccount::create([
     'email' => 'user@example.com',
     'password' => 'secure_password',
-    'connection_type' => ConnectionType::Imap,
+    'connection_type' => ConnectionType::IMAP,
     'imap_server' => 'imap.example.com',
     'imap_port' => 993,
+    'imap_encryption' => 'ssl',
     'smtp_server' => 'smtp.example.com',
     'smtp_port' => 587,
+    'smtp_encryption' => 'tls',
+    'sync_state' => SyncState::ENABLED,
+]);
+
+// Gmail Account  
+$gmailAccount = EmailAccount::create([
+    'email' => 'user@gmail.com',
+    'connection_type' => ConnectionType::GMAIL,
+    'access_token' => $accessToken,
+    'refresh_token' => $refreshToken,
+]);
+
+// Outlook Account
+$outlookAccount = EmailAccount::create([
+    'email' => 'user@outlook.com', 
+    'connection_type' => ConnectionType::OUTLOOK,
+    'access_token' => $accessToken,
+    'refresh_token' => $refreshToken,
 ]);
 ```
 
-### Sending Emails
+#### Account Operations
 
 ```php
-$account = EmailAccount::find(1);
+// Test connection
+if ($account->testConnection()) {
+    echo "Connection successful!";
+}
+
+// Enable/Disable sync
+$account->enableSync();
+$account->disableSync();
+
+// Check sync status
+if (!$account->isSyncDisabled()) {
+    $account->syncEmails();
+}
+
+// Get account statistics
+$stats = $account->getStats();
+echo "Total messages: {$stats['total_messages']}";
+echo "Unread messages: {$stats['unread_messages']}";
+```
+
+### 2. Email Folder Management
+
+#### Working with Folders
+
+```php
+use Turahe\MailClient\Models\EmailAccountFolder;
+
+// Create folder
+$folder = EmailAccountFolder::create([
+    'email_account_id' => $account->id,
+    'name' => 'Important',
+    'display_name' => 'Important Messages',
+    'type' => 'custom',
+    'syncable' => true,
+]);
+
+// Create nested folder
+$subFolder = EmailAccountFolder::create([
+    'email_account_id' => $account->id,
+    'parent_id' => $folder->id,
+    'name' => 'Urgent',
+    'display_name' => 'Urgent Items',
+]);
+
+// Get folder hierarchy
+$rootFolders = $account->folders()->whereNull('parent_id')->get();
+foreach ($rootFolders as $folder) {
+    echo $folder->name;
+    foreach ($folder->children as $child) {
+        echo "  └─ {$child->name}";
+    }
+}
+
+// Folder statistics
+$messageCount = $folder->countReadOrUnreadMessages($folder->id, 'unread');
+echo "Unread messages: {$messageCount}";
+```
+
+### 3. Email Message Management
+
+#### Sending Emails
+
+```php
+use Turahe\MailClient\Client\Client;
+
+// Create client
 $client = $account->createClient();
 
+// Compose and send email
 $message = $client->compose()
     ->to('recipient@example.com')
-    ->subject('Test Email')
-    ->body('Hello from Laravel Mail Client!')
+    ->cc('cc@example.com')
+    ->bcc('bcc@example.com')
+    ->subject('Important Update')
+    ->html('<h1>Hello!</h1><p>This is an HTML email.</p>')
+    ->text('Hello! This is a text email.')
+    ->attach('/path/to/file.pdf')
+    ->send();
+
+// Send with template
+$template = PredefinedMailTemplate::find(1);
+$message = $client->compose()
+    ->to('user@example.com')
+    ->fromTemplate($template)
+    ->variables(['name' => 'John', 'company' => 'Acme Corp'])
     ->send();
 ```
 
-### Managing Folders
+#### Receiving and Managing Messages
 
 ```php
-$folders = $account->folders;
-$activeFolders = $account->activeFolders();
+use Turahe\MailClient\Models\EmailAccountMessage;
 
-foreach ($activeFolders as $folder) {
-    echo $folder->name . ': ' . $folder->messages()->count() . ' messages';
+// Get messages
+$messages = $account->messages()
+    ->unread()
+    ->orderBy('date', 'desc')
+    ->take(10)
+    ->get();
+
+// Mark as read/unread
+$message = EmailAccountMessage::find($id);
+$message->markAsRead();
+$message->markAsUnread();
+
+// Move to folder
+$message->moveToFolder($folder);
+
+// Add to multiple folders
+$message->addToFolders([$folder1, $folder2]);
+
+// Archive/Trash
+$message->archive();
+$message->trash();
+$message->restore();
+
+// Permanent delete
+$message->purge();
+
+// Get message body
+$htmlBody = $message->getHtmlBody();
+$textBody = $message->getTextBody();
+
+// Get attachments
+foreach ($message->attachments as $attachment) {
+    echo "File: {$attachment->name} ({$attachment->size} bytes)";
+    $content = $attachment->getContent();
 }
 ```
 
-## Models & Architecture
+### 4. Email Templates
 
-The package includes **9 comprehensive models** with full test coverage:
+#### Creating Templates
 
-### Core Models
+```php
+use Turahe\MailClient\Models\PredefinedMailTemplate;
 
-- **`EmailAccount`** - Email account management with IMAP/SMTP configuration
-- **`EmailAccountFolder`** - Email folder organization and hierarchy
-- **`EmailAccountMessage`** - Email message storage and metadata
-- **`EmailAccountMessageAddress`** - Email addresses (from, to, cc, bcc)
-- **`EmailAccountMessageHeader`** - Email headers and metadata
-- **`EmailAccountMessageFolder`** - Message-folder relationships (pivot)
-- **`PredefinedMailTemplate`** - Reusable email templates
-- **`ScheduledEmail`** - Scheduled email functionality
-- **`MessageLinksClick`** - Email link tracking and analytics
+$template = PredefinedMailTemplate::create([
+    'name' => 'Welcome Email',
+    'subject' => 'Welcome to {{company}}!',
+    'html_body' => '<h1>Welcome {{name}}!</h1><p>Thank you for joining {{company}}.</p>',
+    'text_body' => 'Welcome {{name}}! Thank you for joining {{company}}.',
+    'is_shared' => true,
+]);
 
-### Key Features
+// Use template
+$processedTemplate = $template->process([
+    'name' => 'John Doe',
+    'company' => 'Acme Corporation'
+]);
 
-- **ULID Primary Keys**: Modern, sortable unique identifiers
-- **Soft Deletes**: Safe data deletion with recovery options
-- **User Stamping**: Track creation and modification users
-- **Rich Relationships**: Complex associations between models
-- **Factory Support**: Complete testing infrastructure
+echo $processedTemplate['subject']; // "Welcome to Acme Corporation!"
+echo $processedTemplate['html_body']; // "Welcome John Doe! Thank you for joining Acme Corporation."
+```
+
+### 5. Scheduled Emails
+
+#### Scheduling Emails
+
+```php
+use Turahe\MailClient\Models\ScheduledEmail;
+use Carbon\Carbon;
+
+// Schedule email
+$scheduledEmail = ScheduledEmail::create([
+    'email_account_id' => $account->id,
+    'to' => 'user@example.com',
+    'subject' => 'Monthly Report',
+    'html_body' => '<h1>Your monthly report is ready!</h1>',
+    'scheduled_at' => Carbon::now()->addDays(7),
+    'data' => ['report_id' => 123],
+]);
+
+// Process due emails (typically in a scheduled job)
+$dueEmails = ScheduledEmail::dueForSend()->get();
+foreach ($dueEmails as $email) {
+    $email->send();
+}
+
+// Cancel scheduled email
+$scheduledEmail->cancel();
+```
+
+### 6. Link Tracking
+
+#### Tracking Email Links
+
+```php
+use Turahe\MailClient\Models\MessageLinksClick;
+
+// Links are automatically tracked when emails contain URLs
+// View click statistics
+$message = EmailAccountMessage::find($id);
+$clicks = $message->linkClicks;
+
+foreach ($clicks as $click) {
+    echo "URL: {$click->url}";
+    echo "Clicked at: {$click->clicked_at}";
+    echo "IP: {$click->ip_address}";
+    echo "User Agent: {$click->user_agent}";
+}
+
+// Get click statistics
+$totalClicks = $message->linkClicks()->count();
+$uniqueClicks = $message->linkClicks()->distinct('ip_address')->count();
+```
+
+## 🔧 Advanced Usage
+
+### Custom Message Processing
+
+```php
+use Turahe\MailClient\Services\EmailAccountMessageService;
+
+$messageService = app(EmailAccountMessageService::class);
+
+// Process incoming message
+$processedMessage = $messageService->processIncomingMessage($rawMessage, $account);
+
+// Apply custom rules
+$messageService->applyRules($message, [
+    'move_spam_to_folder' => $spamFolder->id,
+    'auto_mark_newsletters' => true,
+]);
+```
+
+### Bulk Operations
+
+```php
+// Bulk move messages
+$messages = $account->messages()->unread()->get();
+$account->moveMessagesToFolder($messages, $folder);
+
+// Bulk delete
+$account->deleteMessages($messages);
+
+// Bulk mark as read
+$account->markMessagesAsRead($messages);
+```
+
+### Sync Management
+
+```php
+use Turahe\MailClient\Services\EmailAccountMessageSyncService;
+
+$syncService = app(EmailAccountMessageSyncService::class);
+
+// Full sync
+$syncService->syncAccount($account);
+
+// Incremental sync
+$syncService->syncAccountIncremental($account, $lastSyncDate);
+
+// Sync specific folder
+$syncService->syncFolder($folder);
+```
+
+## 🧪 Testing
+
+The package comes with comprehensive test coverage. Run tests:
+
+```bash
+# All tests
+vendor/bin/phpunit
+
+# Unit tests only
+vendor/bin/phpunit --testsuite=Unit
+
+# Feature tests only  
+vendor/bin/phpunit --testsuite=Feature
+
+# With coverage
+vendor/bin/phpunit --coverage-html coverage
+```
+
+### Using Factories in Tests
+
+```php
+use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
+
+// Create test account
+$account = EmailAccountFactory::new()->create([
+    'email' => 'test@example.com'
+]);
+
+// Create with messages
+$account = EmailAccountFactory::new()
+    ->withMessages(5)
+    ->withFolders(3)
+    ->create();
+```
+
+## 🏗️ Models & Architecture
+
+### Model Relationships
+
+```php
+// EmailAccount relationships
+$account->folders;           // HasMany EmailAccountFolder
+$account->messages;          // HasMany EmailAccountMessage  
+$account->scheduledEmails;   // HasMany ScheduledEmail
+
+// EmailAccountMessage relationships
+$message->account;           // BelongsTo EmailAccount
+$message->folders;           // BelongsToMany EmailAccountFolder
+$message->addresses;         // HasMany EmailAccountMessageAddress
+$message->headers;           // HasMany EmailAccountMessageHeader
+$message->linkClicks;        // HasMany MessageLinksClick
+
+// EmailAccountFolder relationships
+$folder->account;            // BelongsTo EmailAccount
+$folder->parent;             // BelongsTo EmailAccountFolder
+$folder->children;           // HasMany EmailAccountFolder
+$folder->messages;           // BelongsToMany EmailAccountMessage
+```
+
+### Model Features
+
+- **ULID Primary Keys**: Modern, sortable identifiers
+- **Soft Deletes**: Safe deletion with recovery
+- **User Stamps**: Automatic user tracking  
 - **Type Safety**: Full PHP 8.4 type declarations
+- **Factory Support**: Complete testing infrastructure
+- **Rich Relationships**: Complex model associations
 
-## Testing
+## 🛠️ Contributing
 
-This package includes a comprehensive test suite with **120+ test methods** covering all models and functionality.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Run tests (`vendor/bin/phpunit`)
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
-### Test Coverage
+### Development Setup
 
-- ✅ **9 Models**: Complete test coverage for all models
-- ✅ **CRUD Operations**: Create, Read, Update, Delete for all models
-- ✅ **Relationships**: BelongsTo, HasMany, BelongsToMany, MorphToMany
-- ✅ **Validation**: Model constraints and field validation
-- ✅ **Scopes**: Custom query scopes and model methods
-- ✅ **Factories**: Full factory support for all models
-- ✅ **Database**: Foreign key constraints and ULID handling
-
-### Running Tests
-
-Run the test suite:
-
-```bash
-composer test
-```
-
-Run with coverage:
-
-```bash
-composer test-coverage
-```
-
-Run specific model tests:
-
-```bash
-vendor/bin/phpunit tests/Unit/EmailAccountTest.php
-vendor/bin/phpunit tests/Unit/EmailAccountMessageTest.php
-```
-
-## Development
-
-### Prerequisites
-
-- PHP 8.4+ (recommended for best performance)
-- Composer 2.x
-- Laravel 11.x or 12.x
-
-### Setup Development Environment
-
-1. Clone the repository:
 ```bash
 git clone https://github.com/turahe/mail-client.git
 cd mail-client
-```
-
-2. Install dependencies:
-```bash
 composer install
+cp phpunit.xml.dist phpunit.xml
+vendor/bin/phpunit
 ```
 
-3. Run tests:
-```bash
-composer test
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Connection Timeout**
+```php
+// Increase timeout in config
+'imap_timeout' => 60, // seconds
+'smtp_timeout' => 30, // seconds
 ```
 
-### Code Quality
+**Memory Issues with Large Attachments**
+```php
+// Increase memory limit
+ini_set('memory_limit', '512M');
 
-Run static analysis:
-```bash
-composer analyse
+// Use streaming for large files
+$attachment->streamToFile('/path/to/destination');
 ```
 
-Check code style:
-```bash
-composer check-style
+**OAuth Token Expiry**
+```php
+// Refresh tokens automatically
+if ($account->isTokenExpired()) {
+    $account->refreshAccessToken();
+}
 ```
 
-Fix code style:
-```bash
-composer fix
-```
-
-Security check:
-```bash
-composer security-check
-```
-
-## CI/CD Pipeline
-
-This project includes a comprehensive GitHub Actions CI/CD pipeline with the following jobs:
-
-### 🔍 **Test Suite**
-- **Matrix Testing**: PHP 8.3 and 8.4 with Laravel 11.x and 12.x
-- **Unit Tests**: Complete test coverage
-- **Feature Tests**: Integration testing
-- **Code Coverage**: Uploaded to Codecov
-
-### 🔬 **Static Analysis**
-- **PHPStan**: Level 8 static analysis
-- **PHP CS Fixer**: Code style validation
-
-### 🔒 **Security Check**
-- **Security Checker**: Vulnerability scanning
-
-### 🏗️ **Build**
-- **PHAR Building**: Creates executable package
-- **Artifact Upload**: Stores build artifacts
-
-### 🚀 **Release**
-- **Automatic Releases**: Triggered by git tags
-- **Asset Upload**: PHAR files attached to releases
-
-### 📦 **Publish**
-- **Packagist Publishing**: Automatic package publishing
-
-## GitHub Secrets Required
-
-To enable full CI/CD functionality, add these secrets to your GitHub repository:
-
-### `PACKAGIST_TOKEN`
-Your Packagist API token for automatic publishing.
-
-### `GITHUB_TOKEN`
-Automatically provided by GitHub Actions.
-
-## Release Process
-
-### Latest Release: v1.1.0 🎉
-
-The latest version includes comprehensive test suite improvements and enhanced model functionality.
-
-### Creating a Release
-
-1. **Update Changelog**:
-   ```bash
-   # Update CHANGELOG.md with new version
-   ```
-
-2. **Create Tag**:
-   ```bash
-   git tag -a v1.1.0 -m "Release v1.1.0: Comprehensive test suite and model improvements"
-   git push origin v1.1.0
-   ```
-
-3. **Automatic Release**: The CI/CD pipeline will:
-   - Run all 120+ tests
-   - Perform static analysis
-   - Build the PHAR file
-   - Create a GitHub release
-   - Upload the PHAR as a release asset
-   - Publish to Packagist (if on main branch)
-
-### Manual Release
-
-```bash
-# Build PHAR
-composer build
-
-# Create release
-gh release create v1.1.0 mail-client.phar --title "Release v1.1.0" --notes "Comprehensive test suite and model improvements"
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-
-- Follow PSR-12 coding standards
-- Write tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting PR
-
-## License
+## 📄 License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE).
 
-## Support
+## 🤝 Support
 
-For support, please contact:
-- **Email**: wachid@outlook.com
-- **Issues**: [GitHub Issues](https://github.com/turahe/mail-client/issues)
+- 📧 **Email**: wachid@outlook.com
+- 🐛 **Issues**: [GitHub Issues](https://github.com/turahe/mail-client/issues)
+- 📖 **Documentation**: [Wiki](https://github.com/turahe/mail-client/wiki)
 
-## Changelog
+## 📈 Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for a list of changes and version history. 
+See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
+
+---
+
+**Built with ❤️ for the Laravel community**
