@@ -10,6 +10,13 @@ class EmailAccountMessageFolder extends Pivot
     use HasFactory;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'email_account_message_folders';
+
+    /**
      * Create a new factory instance for the model.
      */
     protected static function newFactory()

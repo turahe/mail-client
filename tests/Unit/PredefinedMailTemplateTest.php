@@ -26,9 +26,7 @@ class PredefinedMailTemplateTest extends TestCase
     #[Test]
     public function it_can_list_all_predefined_mail_templates(): void
     {
-        PredefinedMailTemplate::factory()->count(3)->create([
-            'user_id' => $this->testUser->id,
-        ]);
+        PredefinedMailTemplate::factory()->count(3)->create();
 
         $this->assertInstanceOf(Collection::class, PredefinedMailTemplate::all());
         $this->assertCount(3, PredefinedMailTemplate::all());
@@ -42,7 +40,6 @@ class PredefinedMailTemplateTest extends TestCase
             'subject' => 'Welcome to our platform!',
             'body' => '<p>Welcome to our platform. We are excited to have you!</p>',
             'is_shared' => false,
-            'user_id' => $this->testUser->id,
         ];
 
         $template = PredefinedMailTemplate::create($data);
@@ -52,7 +49,6 @@ class PredefinedMailTemplateTest extends TestCase
         $this->assertEquals($data['subject'], $template->subject);
         $this->assertEquals($data['body'], $template->body);
         $this->assertFalse($template->is_shared);
-        $this->assertEquals($data['user_id'], $template->user_id);
     }
 
     #[Test]
@@ -63,13 +59,11 @@ class PredefinedMailTemplateTest extends TestCase
             'subject' => 'This is a shared template',
             'body' => '<p>This template is shared across all users.</p>',
             'is_shared' => true,
-            'user_id' => $this->testUser->id,
         ];
 
         $template = PredefinedMailTemplate::create($data);
 
         $this->assertTrue($template->is_shared);
-        $this->assertEquals($data['user_id'], $template->user_id);
     }
 
     #[Test]
@@ -116,39 +110,28 @@ class PredefinedMailTemplateTest extends TestCase
     }
 
     #[Test]
-    public function it_belongs_to_user(): void
+    public function it_can_create_private_template(): void
     {
         $template = PredefinedMailTemplate::create([
             'name' => 'Test Template',
             'subject' => 'Test Subject',
             'body' => '<p>Test Body</p>',
             'is_shared' => false,
-            'user_id' => $this->testUser->id,
         ]);
 
-        $this->assertEquals($this->testUser->id, $template->user->id);
-        $this->assertEquals($this->testUser->name, $template->user->name);
+        $this->assertFalse($template->is_shared);
+        $this->assertEquals('Test Template', $template->name);
     }
 
     #[Test]
     public function it_can_scope_visible_to_user(): void
     {
-        // Create personal template for testUser
-        $personalTemplate = PredefinedMailTemplate::create([
-            'name' => 'Personal Template',
-            'subject' => 'Personal Subject',
-            'body' => '<p>Personal Body</p>',
+        // Create private template
+        $privateTemplate = PredefinedMailTemplate::create([
+            'name' => 'Private Template',
+            'subject' => 'Private Subject',
+            'body' => '<p>Private Body</p>',
             'is_shared' => false,
-            'user_id' => $this->testUser->id,
-        ]);
-
-        // Create personal template for anotherUser
-        $anotherPersonalTemplate = PredefinedMailTemplate::create([
-            'name' => 'Another Personal Template',
-            'subject' => 'Another Personal Subject',
-            'body' => '<p>Another Personal Body</p>',
-            'is_shared' => false,
-            'user_id' => $this->anotherUser->id,
         ]);
 
         // Create shared template
@@ -157,38 +140,25 @@ class PredefinedMailTemplateTest extends TestCase
             'subject' => 'Shared Subject',
             'body' => '<p>Shared Body</p>',
             'is_shared' => true,
-            'user_id' => $this->testUser->id,
         ]);
 
-        // Test visibility for testUser
-        $visibleToTestUser = PredefinedMailTemplate::visibleToUser($this->testUser->id)->get();
-        $this->assertCount(2, $visibleToTestUser); // personal + shared
-        
-        $templateIds = $visibleToTestUser->pluck('id')->toArray();
-        $this->assertContains($personalTemplate->id, $templateIds);
-        $this->assertContains($sharedTemplate->id, $templateIds);
-        $this->assertNotContains($anotherPersonalTemplate->id, $templateIds);
+        // Test visibleToUser scope - should only return shared templates
+        $visibleTemplates = PredefinedMailTemplate::visibleToUser()->get();
+        $visibleIds = $visibleTemplates->pluck('id')->toArray();
 
-        // Test visibility for anotherUser
-        $visibleToAnotherUser = PredefinedMailTemplate::visibleToUser($this->anotherUser->id)->get();
-        $this->assertCount(2, $visibleToAnotherUser); // personal + shared
-        
-        $anotherTemplateIds = $visibleToAnotherUser->pluck('id')->toArray();
-        $this->assertContains($anotherPersonalTemplate->id, $anotherTemplateIds);
-        $this->assertContains($sharedTemplate->id, $anotherTemplateIds);
-        $this->assertNotContains($personalTemplate->id, $anotherTemplateIds);
+        $this->assertContains($sharedTemplate->id, $visibleIds);
+        $this->assertNotContains($privateTemplate->id, $visibleIds);
     }
 
     #[Test]
     public function it_can_scope_shared_templates(): void
     {
-        // Create personal template
-        $personalTemplate = PredefinedMailTemplate::create([
-            'name' => 'Personal Template',
-            'subject' => 'Personal Subject',
-            'body' => '<p>Personal Body</p>',
+        // Create private template
+        $privateTemplate = PredefinedMailTemplate::create([
+            'name' => 'Private Template',
+            'subject' => 'Private Subject',
+            'body' => '<p>Private Body</p>',
             'is_shared' => false,
-            'user_id' => $this->testUser->id,
         ]);
 
         // Create shared templates
@@ -197,7 +167,6 @@ class PredefinedMailTemplateTest extends TestCase
             'subject' => 'Shared Subject 1',
             'body' => '<p>Shared Body 1</p>',
             'is_shared' => true,
-            'user_id' => $this->testUser->id,
         ]);
 
         $sharedTemplate2 = PredefinedMailTemplate::create([
@@ -205,7 +174,6 @@ class PredefinedMailTemplateTest extends TestCase
             'subject' => 'Shared Subject 2',
             'body' => '<p>Shared Body 2</p>',
             'is_shared' => true,
-            'user_id' => $this->anotherUser->id,
         ]);
 
         $sharedTemplates = PredefinedMailTemplate::shared()->get();
@@ -214,13 +182,13 @@ class PredefinedMailTemplateTest extends TestCase
         $sharedIds = $sharedTemplates->pluck('id')->toArray();
         $this->assertContains($sharedTemplate1->id, $sharedIds);
         $this->assertContains($sharedTemplate2->id, $sharedIds);
-        $this->assertNotContains($personalTemplate->id, $sharedIds);
+        $this->assertNotContains($privateTemplate->id, $sharedIds);
     }
 
     #[Test]
     public function it_has_correct_fillable_attributes(): void
     {
-        $expectedFillable = ['name', 'subject', 'body', 'is_shared', 'user_id'];
+        $expectedFillable = ['name', 'subject', 'body', 'is_shared'];
 
         $template = new PredefinedMailTemplate();
         $this->assertEquals($expectedFillable, $template->getFillable());
@@ -233,7 +201,6 @@ class PredefinedMailTemplateTest extends TestCase
         $casts = $template->getCasts();
 
         $this->assertEquals('boolean', $casts['is_shared']);
-        $this->assertEquals('int', $casts['user_id']);
     }
 
     #[Test]

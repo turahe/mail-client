@@ -16,7 +16,6 @@ class PredefinedMailTemplateFactory extends Factory
             'subject' => $this->faker->sentence,
             'body' => '<p>' . $this->faker->paragraph . '</p>',
             'is_shared' => false,
-            'user_id' => '01h0000000000000000000',
         ];
     }
 
@@ -40,15 +39,7 @@ class PredefinedMailTemplateFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the template belongs to a specific user.
-     */
-    public function forUser($user): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'user_id' => is_object($user) ? $user->id : $user,
-        ]);
-    }
+
 
     /**
      * Create a welcome email template.

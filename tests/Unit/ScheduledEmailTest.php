@@ -45,10 +45,11 @@ class ScheduledEmailTest extends TestCase
         $data = [
             'email_account_id' => $this->testAccount->id,
             'subject' => $this->faker->sentence,
-            'body' => $this->faker->paragraph,
+            'html_body' => $this->faker->paragraph,
             'to' => [$this->faker->email],
             'cc' => [$this->faker->email],
             'bcc' => [],
+            'type' => 'email',
             'scheduled_at' => $scheduledAt,
             'status' => 'pending',
             'retries' => 0,
@@ -59,7 +60,7 @@ class ScheduledEmailTest extends TestCase
         $this->assertInstanceOf(ScheduledEmail::class, $scheduledEmail);
         $this->assertEquals($data['email_account_id'], $scheduledEmail->email_account_id);
         $this->assertEquals($data['subject'], $scheduledEmail->subject);
-        $this->assertEquals($data['body'], $scheduledEmail->body);
+        $this->assertEquals($data['html_body'], $scheduledEmail->html_body);
         $this->assertEquals($data['to'], $scheduledEmail->to);
         $this->assertEquals($data['cc'], $scheduledEmail->cc);
         $this->assertEquals($data['bcc'], $scheduledEmail->bcc);
@@ -382,8 +383,8 @@ class ScheduledEmailTest extends TestCase
         $this->assertEquals('array', $casts['bcc']);
         $this->assertEquals('int', $casts['retries']);
         $this->assertEquals('datetime', $casts['retry_after']);
-        $this->assertEquals('int', $casts['email_account_id']);
-        $this->assertEquals('int', $casts['related_message_id']);
+        $this->assertEquals('string', $casts['email_account_id']);
+        $this->assertEquals('string', $casts['related_message_id']);
         $this->assertEquals('array', $casts['associations']);
     }
 

@@ -4,6 +4,7 @@ namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Application;
@@ -13,11 +14,20 @@ use Turahe\Media\HasMedia;
 
 class ScheduledEmail extends Model
 {
-    use HasMedia,
+    use HasFactory,
+        HasMedia,
         SendsScheduledEmail;
     use HasUlids;
 
     protected $table = 'scheduled_emails';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return \Turahe\MailClient\Tests\Factories\ScheduledEmailFactory::new();
+    }
 
     /**
      * The number of max retries to retry failed emails to sent.
@@ -45,8 +55,8 @@ class ScheduledEmail extends Model
         'bcc' => 'array',
         'retries' => 'int',
         'retry_after' => 'datetime',
-        'email_account_id' => 'int',
-        'related_message_id' => 'int',
+        'email_account_id' => 'string',
+        'related_message_id' => 'string',
         'associations' => 'array',
     ];
 
@@ -101,8 +111,6 @@ class ScheduledEmail extends Model
             'failed_at' => null,
             'sent_at' => now(),
         ])->save();
-
-        $this->purgeMedia();
 
         return $this;
     }
@@ -160,7 +168,7 @@ class ScheduledEmail extends Model
      */
     public function scopeDueForSend(Builder $query): void
     {
-        $query->pending()->where('scheduled_at', '<=', Carbon::asAppTimezone());
+        $query->pending()->where('scheduled_at', '<=', Carbon::now());
     }
 
     /**

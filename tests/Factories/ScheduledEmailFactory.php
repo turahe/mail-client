@@ -15,10 +15,11 @@ class ScheduledEmailFactory extends Factory
         return [
             'email_account_id' => '01h0000000000000000000',
             'subject' => $this->faker->sentence,
-            'body' => $this->faker->paragraph,
+            'html_body' => $this->faker->paragraph,
             'to' => [$this->faker->email],
             'cc' => [],
             'bcc' => [],
+            'type' => 'email',
             'scheduled_at' => Carbon::now()->addHour(),
             'sent_at' => null,
             'failed_at' => null,
