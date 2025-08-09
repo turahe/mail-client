@@ -1,6 +1,22 @@
 # Turahe Mail Client
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/turahe/mail-client/tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/turahe/mail-client/actions?query=workflow%3Atests+branch%3Amaster)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/turahe/mail-client/fix-php-code-style-issues.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/turahe/mail-client/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amaster)
+[![Total Downloads](https://img.shields.io/packagist/dt/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
+[![License](https://img.shields.io/packagist/l/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
+[![PHP Version Require](https://img.shields.io/packagist/php-v/turahe/mailclient.svg?style=flat-square)](https://packagist.org/packages/turahe/mailclient)
+
 A comprehensive Laravel mail client package for managing email accounts, messages, and folders with support for IMAP, SMTP, and various email providers.
+
+## 🆕 What's New in v1.1.0
+
+- **Comprehensive Test Suite**: 120+ test methods covering all 9 models
+- **Complete Factory Support**: Full factory ecosystem for testing
+- **Enhanced Type Safety**: Fixed ULID string casting across all models
+- **Model Improvements**: Added HasFactory traits and missing relationships
+- **Database Fixes**: Resolved foreign key constraints and ULID handling
+- **Test Infrastructure**: CRUD, relationship, validation, and scope testing
 
 ## Features
 
@@ -10,7 +26,11 @@ A comprehensive Laravel mail client package for managing email accounts, message
 - 🔄 **Sync Capabilities**: Automatic email synchronization
 - 📊 **Message Tracking**: Read/unread status, attachments
 - 🎯 **Laravel Integration**: Seamless Laravel framework integration
-- 🧪 **Comprehensive Testing**: Full test coverage with PHPUnit
+- 🧪 **Comprehensive Testing**: Full test coverage with PHPUnit (120+ test methods)
+- 🏭 **Factory Support**: Complete factory ecosystem for all models
+- 🆔 **ULID Support**: Modern ULID primary keys with proper type casting
+- 🔗 **Rich Relationships**: Comprehensive model relationships and associations
+- ⚡ **Modern PHP**: PHP 8.3+ features with enhanced type safety
 
 ## Installation
 
@@ -68,7 +88,46 @@ foreach ($activeFolders as $folder) {
 }
 ```
 
+## Models & Architecture
+
+The package includes **9 comprehensive models** with full test coverage:
+
+### Core Models
+
+- **`EmailAccount`** - Email account management with IMAP/SMTP configuration
+- **`EmailAccountFolder`** - Email folder organization and hierarchy
+- **`EmailAccountMessage`** - Email message storage and metadata
+- **`EmailAccountMessageAddress`** - Email addresses (from, to, cc, bcc)
+- **`EmailAccountMessageHeader`** - Email headers and metadata
+- **`EmailAccountMessageFolder`** - Message-folder relationships (pivot)
+- **`PredefinedMailTemplate`** - Reusable email templates
+- **`ScheduledEmail`** - Scheduled email functionality
+- **`MessageLinksClick`** - Email link tracking and analytics
+
+### Key Features
+
+- **ULID Primary Keys**: Modern, sortable unique identifiers
+- **Soft Deletes**: Safe data deletion with recovery options
+- **User Stamping**: Track creation and modification users
+- **Rich Relationships**: Complex associations between models
+- **Factory Support**: Complete testing infrastructure
+- **Type Safety**: Full PHP 8.4 type declarations
+
 ## Testing
+
+This package includes a comprehensive test suite with **120+ test methods** covering all models and functionality.
+
+### Test Coverage
+
+- ✅ **9 Models**: Complete test coverage for all models
+- ✅ **CRUD Operations**: Create, Read, Update, Delete for all models
+- ✅ **Relationships**: BelongsTo, HasMany, BelongsToMany, MorphToMany
+- ✅ **Validation**: Model constraints and field validation
+- ✅ **Scopes**: Custom query scopes and model methods
+- ✅ **Factories**: Full factory support for all models
+- ✅ **Database**: Foreign key constraints and ULID handling
+
+### Running Tests
 
 Run the test suite:
 
@@ -82,12 +141,19 @@ Run with coverage:
 composer test-coverage
 ```
 
+Run specific model tests:
+
+```bash
+vendor/bin/phpunit tests/Unit/EmailAccountTest.php
+vendor/bin/phpunit tests/Unit/EmailAccountMessageTest.php
+```
+
 ## Development
 
 ### Prerequisites
 
-- PHP 8.3 or 8.4
-- Composer
+- PHP 8.4+ (recommended for best performance)
+- Composer 2.x
 - Laravel 11.x or 12.x
 
 ### Setup Development Environment
@@ -170,22 +236,25 @@ Automatically provided by GitHub Actions.
 
 ## Release Process
 
+### Latest Release: v1.1.0 🎉
+
+The latest version includes comprehensive test suite improvements and enhanced model functionality.
+
 ### Creating a Release
 
-1. **Update Version**:
+1. **Update Changelog**:
    ```bash
-   # Update version in composer.json
-   composer version 1.0.0
+   # Update CHANGELOG.md with new version
    ```
 
 2. **Create Tag**:
    ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
+   git tag -a v1.1.0 -m "Release v1.1.0: Comprehensive test suite and model improvements"
+   git push origin v1.1.0
    ```
 
 3. **Automatic Release**: The CI/CD pipeline will:
-   - Run all tests
+   - Run all 120+ tests
    - Perform static analysis
    - Build the PHAR file
    - Create a GitHub release
@@ -199,7 +268,7 @@ Automatically provided by GitHub Actions.
 composer build
 
 # Create release
-gh release create v1.0.0 mail-client.phar --title "Release v1.0.0" --notes "Initial release"
+gh release create v1.1.0 mail-client.phar --title "Release v1.1.0" --notes "Comprehensive test suite and model improvements"
 ```
 
 ## Contributing
