@@ -9,42 +9,112 @@
 
 A comprehensive Laravel mail client package for managing email accounts, messages, and folders with support for IMAP, SMTP, Gmail, Outlook, and various email providers.
 
+---
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Requirements](#-requirements)
+- [Quick Start](#-quick-start)
+- [Configuration](#️-configuration)
+- [Basic Usage](#-basic-usage)
+- [Advanced Features](#-advanced-features)
+- [Models & Architecture](#️-models--architecture)
+- [Testing](#-testing)
+- [API Reference](#-api-reference)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#️-contributing)
+- [Support](#-support)
+
+---
+
 ## ✨ Features
 
-- 🔐 **Multi-Provider Support**: IMAP, SMTP, Gmail API, Outlook/Exchange
-- 📧 **Complete Email Management**: Send, receive, organize, and track emails
-- 📂 **Folder Hierarchy**: Nested folder structures with full CRUD operations
-- 📋 **Email Templates**: Predefined and reusable email templates
-- ⏰ **Scheduled Emails**: Queue and schedule emails for future delivery
-- 📊 **Link Tracking**: Track email link clicks and analytics
-- 🔄 **Sync Management**: Intelligent email synchronization
-- 🆔 **ULID Support**: Modern, sortable unique identifiers
-- 🧪 **100% Test Coverage**: 173 tests, 566 assertions, rock-solid reliability
+- **🔐 Multi-Provider Support** - IMAP, SMTP, Gmail API, Outlook/Exchange
+- **📧 Complete Email Management** - Send, receive, organize, and track emails
+- **📂 Folder Hierarchy** - Nested folder structures with full CRUD operations
+- **📋 Email Templates** - Predefined and reusable email templates
+- **⏰ Scheduled Emails** - Queue and schedule emails for future delivery
+- **📊 Link Tracking** - Track email link clicks and analytics
+- **🔄 Sync Management** - Intelligent email synchronization
+- **🆔 ULID Support** - Modern, sortable unique identifiers
+- **🧪 100% Test Coverage** - 173 tests, 566 assertions, rock-solid reliability
+
+---
 
 ## 🚀 Requirements
 
-- **PHP**: 8.4+
-- **Laravel**: 12.0+
-- **Database**: MySQL 8.0+, PostgreSQL 13+, SQLite 3.35+
+| Component | Version |
+|-----------|---------|
+| **PHP** | 8.4+ |
+| **Laravel** | 12.0+ |
+| **Database** | MySQL 8.0+ / PostgreSQL 13+ / SQLite 3.35+ |
 
-## 📦 Installation
+---
 
-Install via Composer:
+## ⚡ Quick Start
+
+### 1. Install Package
 
 ```bash
 composer require turahe/mailclient
 ```
 
-Publish configuration and run migrations:
+### 2. Publish & Migrate
 
 ```bash
 php artisan vendor:publish --provider="Turahe\MailClient\MailClientServiceProvider"
 php artisan migrate
 ```
 
+### 3. Create Your First Email Account
+
+```php
+use Turahe\MailClient\Models\EmailAccount;
+use Turahe\MailClient\Enums\ConnectionType;
+
+$account = EmailAccount::create([
+    'email' => 'user@example.com',
+    'password' => 'your_password',
+    'connection_type' => ConnectionType::IMAP,
+    'imap_server' => 'imap.example.com',
+    'imap_port' => 993,
+    'smtp_server' => 'smtp.example.com',
+    'smtp_port' => 587,
+]);
+```
+
+### 4. Send Your First Email
+
+```php
+$client = $account->createClient();
+
+$message = $client->compose()
+    ->to('recipient@example.com')
+    ->subject('Hello World!')
+    ->html('<h1>Hello from Laravel Mail Client!</h1>')
+    ->send();
+```
+
+---
+
 ## ⚙️ Configuration
 
-### Basic Configuration
+### Environment Setup
+
+```env
+# Gmail OAuth
+GMAIL_CLIENT_ID=your_gmail_client_id
+GMAIL_CLIENT_SECRET=your_gmail_client_secret
+GMAIL_REDIRECT_URL=your_callback_url
+
+# Outlook OAuth  
+OUTLOOK_CLIENT_ID=your_outlook_client_id
+OUTLOOK_CLIENT_SECRET=your_outlook_client_secret
+OUTLOOK_REDIRECT_URL=your_callback_url
+```
+
+### Package Configuration
 
 ```php
 // config/mail-client.php
@@ -56,31 +126,17 @@ return [
 ];
 ```
 
-### Environment Variables
+---
 
-```env
-# Gmail Configuration
-GMAIL_CLIENT_ID=your_gmail_client_id
-GMAIL_CLIENT_SECRET=your_gmail_client_secret
-GMAIL_REDIRECT_URL=your_callback_url
+## 📧 Basic Usage
 
-# Outlook Configuration  
-OUTLOOK_CLIENT_ID=your_outlook_client_id
-OUTLOOK_CLIENT_SECRET=your_outlook_client_secret
-OUTLOOK_REDIRECT_URL=your_callback_url
-```
+<details>
+<summary><strong>📥 Email Account Management</strong></summary>
 
-## 📚 Usage Guide
+### Creating Different Account Types
 
-### 1. Email Account Management
-
-#### Creating Email Accounts
-
+#### IMAP/SMTP Account
 ```php
-use Turahe\MailClient\Models\EmailAccount;
-use Turahe\MailClient\Enums\ConnectionType;
-
-// IMAP/SMTP Account
 $account = EmailAccount::create([
     'email' => 'user@example.com',
     'password' => 'secure_password',
@@ -91,18 +147,21 @@ $account = EmailAccount::create([
     'smtp_server' => 'smtp.example.com',
     'smtp_port' => 587,
     'smtp_encryption' => 'tls',
-    'sync_state' => SyncState::ENABLED,
 ]);
+```
 
-// Gmail Account  
+#### Gmail Account
+```php
 $gmailAccount = EmailAccount::create([
     'email' => 'user@gmail.com',
     'connection_type' => ConnectionType::GMAIL,
     'access_token' => $accessToken,
     'refresh_token' => $refreshToken,
 ]);
+```
 
-// Outlook Account
+#### Outlook Account
+```php
 $outlookAccount = EmailAccount::create([
     'email' => 'user@outlook.com', 
     'connection_type' => ConnectionType::OUTLOOK,
@@ -111,46 +170,41 @@ $outlookAccount = EmailAccount::create([
 ]);
 ```
 
-#### Account Operations
+### Account Operations
 
 ```php
 // Test connection
 if ($account->testConnection()) {
-    echo "Connection successful!";
+    echo "✅ Connection successful!";
 }
 
-// Enable/Disable sync
+// Sync management
 $account->enableSync();
 $account->disableSync();
 
-// Check sync status
-if (!$account->isSyncDisabled()) {
-    $account->syncEmails();
-}
-
-// Get account statistics
+// Get statistics
 $stats = $account->getStats();
-echo "Total messages: {$stats['total_messages']}";
-echo "Unread messages: {$stats['unread_messages']}";
+echo "📧 Total: {$stats['total_messages']}";
+echo "🔵 Unread: {$stats['unread_messages']}";
 ```
 
-### 2. Email Folder Management
+</details>
 
-#### Working with Folders
+<details>
+<summary><strong>📂 Folder Management</strong></summary>
+
+### Creating and Organizing Folders
 
 ```php
-use Turahe\MailClient\Models\EmailAccountFolder;
-
-// Create folder
+// Create main folder
 $folder = EmailAccountFolder::create([
     'email_account_id' => $account->id,
     'name' => 'Important',
     'display_name' => 'Important Messages',
-    'type' => 'custom',
     'syncable' => true,
 ]);
 
-// Create nested folder
+// Create subfolder
 $subFolder = EmailAccountFolder::create([
     'email_account_id' => $account->id,
     'parent_id' => $folder->id,
@@ -158,200 +212,257 @@ $subFolder = EmailAccountFolder::create([
     'display_name' => 'Urgent Items',
 ]);
 
-// Get folder hierarchy
+// Browse hierarchy
 $rootFolders = $account->folders()->whereNull('parent_id')->get();
 foreach ($rootFolders as $folder) {
-    echo $folder->name;
+    echo "📁 {$folder->name}\n";
     foreach ($folder->children as $child) {
-        echo "  └─ {$child->name}";
+        echo "   └─ 📁 {$child->name}\n";
     }
 }
-
-// Folder statistics
-$messageCount = $folder->countReadOrUnreadMessages($folder->id, 'unread');
-echo "Unread messages: {$messageCount}";
 ```
 
-### 3. Email Message Management
+</details>
 
-#### Sending Emails
+<details>
+<summary><strong>📨 Sending Emails</strong></summary>
+
+### Basic Email Composition
 
 ```php
-use Turahe\MailClient\Client\Client;
-
-// Create client
 $client = $account->createClient();
 
-// Compose and send email
-$message = $client->compose()
-    ->to('recipient@example.com')
-    ->cc('cc@example.com')
-    ->bcc('bcc@example.com')
-    ->subject('Important Update')
-    ->html('<h1>Hello!</h1><p>This is an HTML email.</p>')
-    ->text('Hello! This is a text email.')
-    ->attach('/path/to/file.pdf')
-    ->send();
-
-// Send with template
-$template = PredefinedMailTemplate::find(1);
+// Simple email
 $message = $client->compose()
     ->to('user@example.com')
-    ->fromTemplate($template)
-    ->variables(['name' => 'John', 'company' => 'Acme Corp'])
+    ->subject('Meeting Tomorrow')
+    ->text('Don\'t forget our meeting at 2 PM tomorrow.')
+    ->send();
+
+// Rich HTML email
+$message = $client->compose()
+    ->to('user@example.com')
+    ->cc('manager@example.com')
+    ->bcc('archive@example.com')
+    ->subject('Project Update')
+    ->html('
+        <h2>Project Status Update</h2>
+        <p>The project is <strong>on track</strong> for completion.</p>
+        <ul>
+            <li>✅ Phase 1: Complete</li>
+            <li>🔄 Phase 2: In Progress</li>
+            <li>⏳ Phase 3: Planned</li>
+        </ul>
+    ')
+    ->attach('/path/to/report.pdf')
     ->send();
 ```
 
-#### Receiving and Managing Messages
+### Using Templates
 
 ```php
-use Turahe\MailClient\Models\EmailAccountMessage;
+$template = PredefinedMailTemplate::find(1);
+$message = $client->compose()
+    ->to('customer@example.com')
+    ->fromTemplate($template)
+    ->variables([
+        'customer_name' => 'John Doe',
+        'order_number' => 'ORD-12345',
+        'delivery_date' => '2025-01-15'
+    ])
+    ->send();
+```
 
-// Get messages
+</details>
+
+<details>
+<summary><strong>📬 Managing Messages</strong></summary>
+
+### Reading Messages
+
+```php
+// Get recent unread messages
 $messages = $account->messages()
     ->unread()
     ->orderBy('date', 'desc')
     ->take(10)
     ->get();
 
-// Mark as read/unread
-$message = EmailAccountMessage::find($id);
+foreach ($messages as $message) {
+    echo "📧 {$message->subject}\n";
+    echo "👤 From: {$message->from_address}\n";
+    echo "📅 Date: {$message->date}\n\n";
+}
+```
+
+### Message Operations
+
+```php
+$message = EmailAccountMessage::find($messageId);
+
+// Status operations
 $message->markAsRead();
 $message->markAsUnread();
 
-// Move to folder
-$message->moveToFolder($folder);
-
-// Add to multiple folders
+// Organization
+$message->moveToFolder($importantFolder);
 $message->addToFolders([$folder1, $folder2]);
 
-// Archive/Trash
+// Lifecycle management
 $message->archive();
 $message->trash();
 $message->restore();
+$message->purge(); // Permanent delete
+```
 
-// Permanent delete
-$message->purge();
+### Working with Content
 
-// Get message body
+```php
+// Get message content
 $htmlBody = $message->getHtmlBody();
 $textBody = $message->getTextBody();
 
-// Get attachments
+// Handle attachments
 foreach ($message->attachments as $attachment) {
-    echo "File: {$attachment->name} ({$attachment->size} bytes)";
+    echo "📎 {$attachment->name} ({$attachment->size} bytes)\n";
+    
+    // Download attachment
     $content = $attachment->getContent();
+    file_put_contents("/downloads/{$attachment->name}", $content);
 }
 ```
 
-### 4. Email Templates
+</details>
 
-#### Creating Templates
+---
+
+## 🚀 Advanced Features
+
+<details>
+<summary><strong>📋 Email Templates</strong></summary>
+
+### Creating Templates
 
 ```php
-use Turahe\MailClient\Models\PredefinedMailTemplate;
-
 $template = PredefinedMailTemplate::create([
-    'name' => 'Welcome Email',
-    'subject' => 'Welcome to {{company}}!',
-    'html_body' => '<h1>Welcome {{name}}!</h1><p>Thank you for joining {{company}}.</p>',
-    'text_body' => 'Welcome {{name}}! Thank you for joining {{company}}.',
+    'name' => 'Order Confirmation',
+    'subject' => 'Order {{order_number}} Confirmed',
+    'html_body' => '
+        <h1>Order Confirmed! 🎉</h1>
+        <p>Hello {{customer_name}},</p>
+        <p>Your order <strong>#{{order_number}}</strong> has been confirmed.</p>
+        <p>Expected delivery: {{delivery_date}}</p>
+    ',
+    'text_body' => 'Hello {{customer_name}}, your order #{{order_number}} is confirmed. Delivery: {{delivery_date}}',
     'is_shared' => true,
 ]);
-
-// Use template
-$processedTemplate = $template->process([
-    'name' => 'John Doe',
-    'company' => 'Acme Corporation'
-]);
-
-echo $processedTemplate['subject']; // "Welcome to Acme Corporation!"
-echo $processedTemplate['html_body']; // "Welcome John Doe! Thank you for joining Acme Corporation."
 ```
 
-### 5. Scheduled Emails
-
-#### Scheduling Emails
+### Using Template Variables
 
 ```php
-use Turahe\MailClient\Models\ScheduledEmail;
-use Carbon\Carbon;
+$processedTemplate = $template->process([
+    'customer_name' => 'Sarah Johnson',
+    'order_number' => 'ORD-789',
+    'delivery_date' => 'January 20, 2025'
+]);
 
-// Schedule email
+// Result:
+// Subject: "Order ORD-789 Confirmed"
+// Body: "Hello Sarah Johnson, your order #ORD-789 is confirmed..."
+```
+
+</details>
+
+<details>
+<summary><strong>⏰ Scheduled Emails</strong></summary>
+
+### Scheduling Emails
+
+```php
 $scheduledEmail = ScheduledEmail::create([
     'email_account_id' => $account->id,
-    'to' => 'user@example.com',
-    'subject' => 'Monthly Report',
-    'html_body' => '<h1>Your monthly report is ready!</h1>',
-    'scheduled_at' => Carbon::now()->addDays(7),
-    'data' => ['report_id' => 123],
+    'to' => 'customer@example.com',
+    'subject' => 'Weekly Newsletter',
+    'html_body' => '<h1>This Week in Tech</h1>...',
+    'scheduled_at' => Carbon::now()->addWeek(),
+    'data' => ['newsletter_id' => 456],
 ]);
-
-// Process due emails (typically in a scheduled job)
-$dueEmails = ScheduledEmail::dueForSend()->get();
-foreach ($dueEmails as $email) {
-    $email->send();
-}
-
-// Cancel scheduled email
-$scheduledEmail->cancel();
 ```
 
-### 6. Link Tracking
-
-#### Tracking Email Links
+### Processing Scheduled Emails
 
 ```php
-use Turahe\MailClient\Models\MessageLinksClick;
+// In your scheduled job (e.g., daily)
+$dueEmails = ScheduledEmail::dueForSend()->get();
 
-// Links are automatically tracked when emails contain URLs
-// View click statistics
-$message = EmailAccountMessage::find($id);
+foreach ($dueEmails as $email) {
+    try {
+        $email->send();
+        echo "✅ Sent: {$email->subject}\n";
+    } catch (Exception $e) {
+        echo "❌ Failed: {$e->getMessage()}\n";
+    }
+}
+```
+
+</details>
+
+<details>
+<summary><strong>📊 Link Tracking</strong></summary>
+
+### Automatic Link Tracking
+
+```php
+// Links in emails are automatically tracked
+$message = $client->compose()
+    ->to('user@example.com')
+    ->subject('Check out our new features!')
+    ->html('
+        <p>Visit our <a href="https://example.com/features">new features page</a></p>
+        <p>Read the <a href="https://example.com/blog/update">latest blog post</a></p>
+    ')
+    ->send();
+```
+
+### Analyzing Click Data
+
+```php
+$message = EmailAccountMessage::find($messageId);
+
+// Get all clicks
 $clicks = $message->linkClicks;
 
 foreach ($clicks as $click) {
-    echo "URL: {$click->url}";
-    echo "Clicked at: {$click->clicked_at}";
-    echo "IP: {$click->ip_address}";
-    echo "User Agent: {$click->user_agent}";
+    echo "🔗 URL: {$click->url}\n";
+    echo "📅 Clicked: {$click->clicked_at}\n";
+    echo "🌍 IP: {$click->ip_address}\n";
+    echo "💻 Browser: {$click->user_agent}\n\n";
 }
 
-// Get click statistics
+// Statistics
 $totalClicks = $message->linkClicks()->count();
 $uniqueClicks = $message->linkClicks()->distinct('ip_address')->count();
+echo "📊 Total clicks: {$totalClicks} | Unique: {$uniqueClicks}";
 ```
 
-## 🔧 Advanced Usage
+</details>
 
-### Custom Message Processing
+<details>
+<summary><strong>🔄 Bulk Operations</strong></summary>
 
-```php
-use Turahe\MailClient\Services\EmailAccountMessageService;
-
-$messageService = app(EmailAccountMessageService::class);
-
-// Process incoming message
-$processedMessage = $messageService->processIncomingMessage($rawMessage, $account);
-
-// Apply custom rules
-$messageService->applyRules($message, [
-    'move_spam_to_folder' => $spamFolder->id,
-    'auto_mark_newsletters' => true,
-]);
-```
-
-### Bulk Operations
+### Mass Message Management
 
 ```php
-// Bulk move messages
-$messages = $account->messages()->unread()->get();
-$account->moveMessagesToFolder($messages, $folder);
+// Get messages to process
+$messages = $account->messages()
+    ->where('subject', 'like', '%newsletter%')
+    ->get();
 
-// Bulk delete
-$account->deleteMessages($messages);
-
-// Bulk mark as read
+// Bulk operations
+$account->moveMessagesToFolder($messages, $newsletterFolder);
 $account->markMessagesAsRead($messages);
+$account->deleteMessages($messages);
 ```
 
 ### Sync Management
@@ -361,35 +472,75 @@ use Turahe\MailClient\Services\EmailAccountMessageSyncService;
 
 $syncService = app(EmailAccountMessageSyncService::class);
 
-// Full sync
+// Full account sync
 $syncService->syncAccount($account);
 
-// Incremental sync
-$syncService->syncAccountIncremental($account, $lastSyncDate);
+// Incremental sync (faster)
+$lastSync = $account->last_synced_at;
+$syncService->syncAccountIncremental($account, $lastSync);
 
-// Sync specific folder
+// Sync specific folder only
 $syncService->syncFolder($folder);
 ```
 
+</details>
+
+---
+
+## 🏗️ Models & Architecture
+
+### Core Models Overview
+
+| Model | Purpose | Key Features |
+|-------|---------|--------------|
+| **EmailAccount** | Email account management | Multi-provider support, OAuth, sync settings |
+| **EmailAccountFolder** | Folder organization | Hierarchical structure, sync control |
+| **EmailAccountMessage** | Message storage | Rich content, attachments, metadata |
+| **EmailAccountMessageAddress** | Email addresses | From, To, CC, BCC tracking |
+| **EmailAccountMessageHeader** | Email headers | Technical metadata storage |
+| **PredefinedMailTemplate** | Email templates | Variable substitution, sharing |
+| **ScheduledEmail** | Email scheduling | Queue management, retry logic |
+| **MessageLinksClick** | Link analytics | Click tracking, user behavior |
+
+### Key Relationships
+
+```php
+// EmailAccount (1:N)
+$account->folders;           // All folders
+$account->messages;          // All messages  
+$account->scheduledEmails;   // Scheduled emails
+
+// EmailAccountMessage (N:M)
+$message->folders;           // Associated folders
+$message->addresses;         // Email addresses
+$message->headers;           // Technical headers
+$message->linkClicks;        // Click analytics
+
+// EmailAccountFolder (Tree)
+$folder->parent;             // Parent folder
+$folder->children;           // Child folders
+$folder->messages;           // Folder messages
+```
+
+---
+
 ## 🧪 Testing
 
-The package comes with comprehensive test coverage. Run tests:
+### Running Tests
 
 ```bash
-# All tests
+# All tests (173 tests, 566 assertions)
 vendor/bin/phpunit
 
-# Unit tests only
-vendor/bin/phpunit --testsuite=Unit
+# Specific test suites
+vendor/bin/phpunit --testsuite=Unit     # Unit tests only
+vendor/bin/phpunit --testsuite=Feature  # Feature tests only
 
-# Feature tests only  
-vendor/bin/phpunit --testsuite=Feature
-
-# With coverage
+# With coverage report
 vendor/bin/phpunit --coverage-html coverage
 ```
 
-### Using Factories in Tests
+### Using Test Factories
 
 ```php
 use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
@@ -399,102 +550,214 @@ $account = EmailAccountFactory::new()->create([
     'email' => 'test@example.com'
 ]);
 
-// Create with messages
+// Create account with related data
 $account = EmailAccountFactory::new()
-    ->withMessages(5)
-    ->withFolders(3)
+    ->withMessages(10)      // 10 messages
+    ->withFolders(5)        // 5 folders
     ->create();
+
+// Create specific message
+$message = EmailAccountMessageFactory::new()
+    ->forAccount($account)
+    ->create([
+        'subject' => 'Test Message',
+        'from_address' => 'sender@example.com'
+    ]);
 ```
 
-## 🏗️ Models & Architecture
+---
 
-### Model Relationships
+## 📖 API Reference
+
+<details>
+<summary><strong>EmailAccount Methods</strong></summary>
 
 ```php
-// EmailAccount relationships
-$account->folders;           // HasMany EmailAccountFolder
-$account->messages;          // HasMany EmailAccountMessage  
-$account->scheduledEmails;   // HasMany ScheduledEmail
+// Connection management
+$account->testConnection(): bool
+$account->createClient(): Client
 
-// EmailAccountMessage relationships
-$message->account;           // BelongsTo EmailAccount
-$message->folders;           // BelongsToMany EmailAccountFolder
-$message->addresses;         // HasMany EmailAccountMessageAddress
-$message->headers;           // HasMany EmailAccountMessageHeader
-$message->linkClicks;        // HasMany MessageLinksClick
+// Sync control
+$account->enableSync(): void
+$account->disableSync(): void
+$account->isSyncDisabled(): bool
 
-// EmailAccountFolder relationships
-$folder->account;            // BelongsTo EmailAccount
-$folder->parent;             // BelongsTo EmailAccountFolder
-$folder->children;           // HasMany EmailAccountFolder
-$folder->messages;           // BelongsToMany EmailAccountMessage
+// Statistics
+$account->getStats(): array
+$account->getUnreadCount(): int
+
+// Token management (OAuth accounts)
+$account->refreshAccessToken(): void
+$account->isTokenExpired(): bool
 ```
 
-### Model Features
+</details>
 
-- **ULID Primary Keys**: Modern, sortable identifiers
-- **Soft Deletes**: Safe deletion with recovery
-- **User Stamps**: Automatic user tracking  
-- **Type Safety**: Full PHP 8.4 type declarations
-- **Factory Support**: Complete testing infrastructure
-- **Rich Relationships**: Complex model associations
+<details>
+<summary><strong>EmailAccountMessage Methods</strong></summary>
+
+```php
+// Status management
+$message->markAsRead(): void
+$message->markAsUnread(): void
+$message->isRead(): bool
+
+// Organization
+$message->moveToFolder(EmailAccountFolder $folder): void
+$message->addToFolders(array $folders): void
+$message->removeFromFolder(EmailAccountFolder $folder): void
+
+// Lifecycle
+$message->archive(): void
+$message->trash(): void
+$message->restore(): void
+$message->purge(): void
+
+// Content access
+$message->getHtmlBody(): string
+$message->getTextBody(): string
+$message->hasAttachments(): bool
+```
+
+</details>
+
+<details>
+<summary><strong>PredefinedMailTemplate Methods</strong></summary>
+
+```php
+// Template processing
+$template->process(array $variables): array
+$template->getProcessedSubject(array $variables): string
+$template->getProcessedBody(array $variables): string
+
+// Sharing
+$template->makeShared(): void
+$template->makePrivate(): void
+$template->isShared(): bool
+```
+
+</details>
+
+---
+
+## 🐛 Troubleshooting
+
+<details>
+<summary><strong>Connection Issues</strong></summary>
+
+**Problem**: Connection timeout errors
+```php
+// Solution: Increase timeout settings
+'imap_timeout' => 60,  // seconds
+'smtp_timeout' => 30,  // seconds
+```
+
+**Problem**: SSL certificate errors
+```php
+// Solution: Disable SSL verification (development only)
+'imap_options' => [
+    'ssl' => [
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+    ]
+]
+```
+
+</details>
+
+<details>
+<summary><strong>Memory Issues</strong></summary>
+
+**Problem**: Memory exhaustion with large attachments
+```php
+// Solution 1: Increase memory limit
+ini_set('memory_limit', '512M');
+
+// Solution 2: Use streaming
+$attachment->streamToFile('/path/to/destination');
+
+// Solution 3: Process in chunks
+$account->messages()->chunk(50, function ($messages) {
+    // Process 50 messages at a time
+});
+```
+
+</details>
+
+<details>
+<summary><strong>OAuth Token Issues</strong></summary>
+
+**Problem**: Expired access tokens
+```php
+// Solution: Automatic token refresh
+if ($account->isTokenExpired()) {
+    $account->refreshAccessToken();
+}
+
+// Or handle in exception
+try {
+    $client->getMessages();
+} catch (UnauthorizedException $e) {
+    $account->refreshAccessToken();
+    $client->getMessages(); // Retry
+}
+```
+
+</details>
+
+---
 
 ## 🛠️ Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Run tests (`vendor/bin/phpunit`)
-4. Commit your changes (`git commit -m 'Add amazing feature'`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a Pull Request
+We welcome contributions! Here's how to get started:
 
 ### Development Setup
 
 ```bash
+# Clone and setup
 git clone https://github.com/turahe/mail-client.git
 cd mail-client
 composer install
+
+# Prepare testing
 cp phpunit.xml.dist phpunit.xml
 vendor/bin/phpunit
+
+# Start coding!
 ```
 
-## 🐛 Troubleshooting
+### Contribution Process
 
-### Common Issues
+1. **Fork** the repository
+2. **Create** feature branch (`git checkout -b feature/amazing-feature`)
+3. **Write** tests for your changes
+4. **Ensure** all tests pass (`vendor/bin/phpunit`)
+5. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+6. **Push** to branch (`git push origin feature/amazing-feature`)
+7. **Open** a Pull Request
 
-**Connection Timeout**
-```php
-// Increase timeout in config
-'imap_timeout' => 60, // seconds
-'smtp_timeout' => 30, // seconds
-```
+### Code Standards
 
-**Memory Issues with Large Attachments**
-```php
-// Increase memory limit
-ini_set('memory_limit', '512M');
+- ✅ **PHP 8.4+** type declarations
+- ✅ **PSR-12** coding standards
+- ✅ **100% test coverage** for new features
+- ✅ **PHPStan level 8** compliance
+- ✅ **Clear documentation** for public methods
 
-// Use streaming for large files
-$attachment->streamToFile('/path/to/destination');
-```
+---
 
-**OAuth Token Expiry**
-```php
-// Refresh tokens automatically
-if ($account->isTokenExpired()) {
-    $account->refreshAccessToken();
-}
-```
+## 📞 Support
+
+- 📧 **Email**: [wachid@outlook.com](mailto:wachid@outlook.com)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/turahe/mail-client/issues)
+- 📖 **Wiki**: [Documentation](https://github.com/turahe/mail-client/wiki)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/turahe/mail-client/discussions)
+
+---
 
 ## 📄 License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE).
-
-## 🤝 Support
-
-- 📧 **Email**: wachid@outlook.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/turahe/mail-client/issues)
-- 📖 **Documentation**: [Wiki](https://github.com/turahe/mail-client/wiki)
 
 ## 📈 Changelog
 
@@ -502,4 +765,10 @@ See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
 
 ---
 
+<div align="center">
+
 **Built with ❤️ for the Laravel community**
+
+[⭐ Star us on GitHub](https://github.com/turahe/mail-client) • [📦 View on Packagist](https://packagist.org/packages/turahe/mailclient)
+
+</div>
