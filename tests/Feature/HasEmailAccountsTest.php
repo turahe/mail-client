@@ -1,6 +1,6 @@
 <?php
 
-namespace Turahe\MailClient\Tests\Concerns;
+namespace Turahe\MailClient\Tests\Feature;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;

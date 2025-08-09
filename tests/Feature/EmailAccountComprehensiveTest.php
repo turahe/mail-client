@@ -1,6 +1,6 @@
 <?php
 
-namespace Turahe\MailClient\Tests\Unit;
+namespace Turahe\MailClient\Tests\Feature;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;

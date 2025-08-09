@@ -7,8 +7,13 @@
     <testsuites>
         <testsuite name="Unit">
             <directory>tests/Unit</directory>
+            <exclude>tests/Unit/EmailAccountComprehensiveTest.php</exclude>
         </testsuite>
         <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+        <testsuite name="All">
+            <directory>tests/Unit</directory>
             <directory>tests/Feature</directory>
         </testsuite>
     </testsuites>
