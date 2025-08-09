@@ -125,7 +125,7 @@ class EmailAccountMessageAddressTest extends TestCase
     #[Test]
     public function it_has_correct_fillable_attributes(): void
     {
-        $expectedFillable = ['address', 'name', 'address_type'];
+        $expectedFillable = ['address', 'name', 'address_type', 'message_id'];
 
         $address = new EmailAccountMessageAddress();
         $this->assertEquals($expectedFillable, $address->getFillable());

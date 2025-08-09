@@ -29,7 +29,7 @@ class EmailAccountMessageAddress extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['address', 'name', 'address_type'];
+    protected $fillable = ['address', 'name', 'address_type', 'message_id'];
 
     /**
      * The attributes that should be cast.

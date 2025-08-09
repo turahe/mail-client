@@ -144,7 +144,8 @@ class EmailAccountMessageTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $message->addresses);
         $this->assertCount(1, $message->addresses);
-        $this->assertEquals($address->id, $message->addresses->first()->id);
+        $this->assertEquals($address->address, $message->addresses->first()->address);
+        $this->assertEquals($address->address_type, $message->addresses->first()->address_type);
     }
 
     #[Test]

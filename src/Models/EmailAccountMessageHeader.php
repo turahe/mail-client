@@ -31,7 +31,7 @@ class EmailAccountMessageHeader extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'value', 'header_type'];
+    protected $fillable = ['name', 'value', 'header_type', 'message_id'];
 
     /**
      * The attributes that should be cast.

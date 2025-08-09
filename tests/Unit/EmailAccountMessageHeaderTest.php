@@ -126,7 +126,7 @@ class EmailAccountMessageHeaderTest extends TestCase
     #[Test]
     public function it_has_correct_fillable_attributes(): void
     {
-        $expectedFillable = ['name', 'value', 'header_type'];
+        $expectedFillable = ['name', 'value', 'header_type', 'message_id'];
 
         $header = new EmailAccountMessageHeader();
         $this->assertEquals($expectedFillable, $header->getFillable());
