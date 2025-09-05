@@ -1,0 +1,147 @@
+# Git attributes for Turahe Mail Client Package
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# PHP files
+*.php text eol=lf
+*.phar binary
+
+# Documentation
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# Configuration files
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.ini text eol=lf
+*.neon text eol=lf
+
+# Database files
+*.sql text eol=lf
+
+# Composer
+composer.json text eol=lf
+composer.lock text eol=lf
+
+# Git files
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Exclude files from archives
+# Development and build files
+/.github/ export-ignore
+/.vscode/ export-ignore
+/.idea/ export-ignore
+*.swp export-ignore
+*.swo export-ignore
+*~ export-ignore
+
+# Test files
+/tests/ export-ignore
+/phpunit.xml export-ignore
+/phpunit.xml.dist export-ignore
+/.phpunit.result.cache export-ignore
+
+# Development dependencies
+/vendor/ export-ignore
+/node_modules/ export-ignore
+
+# Build artifacts
+/build/ export-ignore
+/dist/ export-ignore
+*.phar export-ignore
+
+# IDE and editor files
+*.sublime-project export-ignore
+*.sublime-workspace export-ignore
+*.vscode/ export-ignore
+.idea/ export-ignore
+
+# OS generated files
+.DS_Store export-ignore
+.DS_Store? export-ignore
+._* export-ignore
+.Spotlight-V100 export-ignore
+.Trashes export-ignore
+ehthumbs.db export-ignore
+Thumbs.db export-ignore
+
+# Logs
+*.log export-ignore
+/logs/ export-ignore
+
+# Cache files
+*.cache export-ignore
+/cache/ export-ignore
+
+# Temporary files
+*.tmp export-ignore
+*.temp export-ignore
+/tmp/ export-ignore
+
+# Coverage reports
+/coverage/ export-ignore
+/.phpunit.cache/ export-ignore
+/.phpunit.result.cache export-ignore
+
+# Static analysis
+/.phpstan/ export-ignore
+/phpstan.neon export-ignore
+/phpstan-baseline.neon export-ignore
+
+# Code style
+/.php-cs-fixer.cache export-ignore
+/.php-cs-fixer.php export-ignore
+
+# Documentation build
+/docs/ export-ignore
+/.readthedocs.yml export-ignore
+
+# CI/CD files (keep only essential ones)
+/.github/workflows/ export-ignore
+/.github/ISSUE_TEMPLATE/ export-ignore
+/.github/PULL_REQUEST_TEMPLATE.md export-ignore
+/.github/dependabot.yml export-ignore
+
+# Keep important CI files
+/.github/FUNDING.yml export-ignore
+/.github/SECURITY.md export-ignore
+
+# Binary files
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.rar binary
+*.7z binary
+
+# Archive files
+*.zip binary
+*.tar.gz binary
+*.tar.bz2 binary
+*.rar binary
+*.7z binary
+*.gz binary
+*.bz2 binary
+
+# Executable files
+*.exe binary
+*.msi binary
+*.dmg binary
+*.pkg binary
+*.deb binary
+*.rpm binary
