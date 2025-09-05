@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2025-01-09
+
+### Added
+- **GitHub CI Release Workflow**: Automatic Packagist releases on tag push
+- **Packagist Integration**: Automated package updates with webhook notifications
+- **Release Automation**: GitHub release creation with proper release notes
+- **Repository Optimization**: Comprehensive .gitattributes for proper file handling
+
+### Fixed
+- **CI Workflow**: Fixed PHPUnit configuration copy error in GitHub Actions
+- **File Management**: Removed unnecessary development files from repository
+- **Workflow Efficiency**: Eliminated redundant copy steps in CI pipeline
+
+### Changed
+- **Repository Structure**: Added .gitattributes for better file handling
+- **CI Pipeline**: Streamlined workflow by removing unnecessary steps
+- **Documentation**: Added comprehensive Packagist setup guide
+
+### Technical Improvements
+- **Automated Releases**: Tag-based releases now automatically update Packagist
+- **Clean Archives**: Only essential files included in distribution packages
+- **Proper Line Endings**: Consistent text file handling across platforms
+- **Binary File Optimization**: Correct handling of binary files in repository
+
 ## [1.2.0] - 2025-01-09
 
 ### Fixed
