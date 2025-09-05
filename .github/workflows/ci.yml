@@ -39,7 +39,7 @@ jobs:
         composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
     - name: Copy PHPUnit configuration
-      run: cp phpunit.xml.dist phpunit.xml
+      run: cp phpunit.xml phpunit.xml.dist
 
     - name: Execute tests (Unit)
       run: vendor/bin/phpunit --testsuite=Unit
@@ -76,7 +76,7 @@ jobs:
       run: composer install --prefer-dist --no-interaction
 
     - name: Copy PHPUnit configuration
-      run: cp phpunit.xml.dist phpunit.xml
+      run: cp phpunit.xml phpunit.xml.dist
 
     - name: Run PHPStan
       run: vendor/bin/phpstan analyse --memory-limit=2G
@@ -104,7 +104,7 @@ jobs:
       run: composer install --prefer-dist --no-interaction
 
     - name: Copy PHPUnit configuration
-      run: cp phpunit.xml.dist phpunit.xml
+      run: cp phpunit.xml phpunit.xml.dist
 
     - name: Run Security Check
       run: composer audit
@@ -129,7 +129,7 @@ jobs:
       run: composer install --prefer-dist --no-interaction
 
     - name: Copy PHPUnit configuration
-      run: cp phpunit.xml.dist phpunit.xml
+      run: cp phpunit.xml phpunit.xml.dist
 
     - name: Validate composer.json
       run: composer validate --strict
