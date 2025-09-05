@@ -19,6 +19,7 @@ class EmailAccountFolderTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $testAccount;
 
     protected function setUp(): void
@@ -189,7 +190,7 @@ class EmailAccountFolderTest extends TestCase
     #[Test]
     public function it_uses_correct_table(): void
     {
-        $folder = new EmailAccountFolder();
+        $folder = new EmailAccountFolder;
         $this->assertEquals('email_account_folders', $folder->getTable());
     }
 
@@ -201,14 +202,14 @@ class EmailAccountFolderTest extends TestCase
             'email_account_id', 'syncable', 'selectable', 'type', 'support_move',
         ];
 
-        $folder = new EmailAccountFolder();
+        $folder = new EmailAccountFolder;
         $this->assertEquals($expectedFillable, $folder->getFillable());
     }
 
     #[Test]
     public function it_casts_attributes_correctly(): void
     {
-        $folder = new EmailAccountFolder();
+        $folder = new EmailAccountFolder;
         $casts = $folder->getCasts();
 
         $this->assertEquals('boolean', $casts['selectable']);

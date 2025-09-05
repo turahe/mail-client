@@ -4,9 +4,11 @@ namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Turahe\Core\Concerns\HasConfigurablePrimaryKey;
 
 class EmailAccountMessageAddress extends Model
 {
+    use HasConfigurablePrimaryKey;
     use HasFactory;
 
     /**

@@ -16,7 +16,9 @@ class MessageLinksClickTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $testAccount;
+
     protected $testMessage;
 
     protected function setUp(): void
@@ -87,14 +89,14 @@ class MessageLinksClickTest extends TestCase
     {
         $expectedFillable = ['url', 'message_id'];
 
-        $click = new MessageLinksClick();
+        $click = new MessageLinksClick;
         $this->assertEquals($expectedFillable, $click->getFillable());
     }
 
     #[Test]
     public function it_casts_attributes_correctly(): void
     {
-        $click = new MessageLinksClick();
+        $click = new MessageLinksClick;
         $casts = $click->getCasts();
 
         $this->assertEquals('string', $casts['message_id']);
@@ -103,14 +105,14 @@ class MessageLinksClickTest extends TestCase
     #[Test]
     public function it_uses_correct_table(): void
     {
-        $click = new MessageLinksClick();
+        $click = new MessageLinksClick;
         $this->assertEquals('message_links_clicks', $click->getTable());
     }
 
     #[Test]
     public function it_has_timestamps(): void
     {
-        $click = new MessageLinksClick();
+        $click = new MessageLinksClick;
         $this->assertTrue($click->timestamps);
     }
 
@@ -141,7 +143,7 @@ class MessageLinksClickTest extends TestCase
     public function it_can_find_clicks_by_url(): void
     {
         $url = 'https://example.com/specific-url';
-        
+
         MessageLinksClick::create([
             'url' => $url,
             'message_id' => $this->testMessage->id,
@@ -191,8 +193,8 @@ class MessageLinksClickTest extends TestCase
     #[Test]
     public function it_can_handle_long_urls(): void
     {
-        $longUrl = 'https://example.com/very/long/path/with/many/segments/and/parameters?' . 
-                   'param1=value1&param2=value2&param3=value3&param4=value4&param5=value5' .
+        $longUrl = 'https://example.com/very/long/path/with/many/segments/and/parameters?'.
+                   'param1=value1&param2=value2&param3=value3&param4=value4&param5=value5'.
                    '&param6=value6&param7=value7&param8=value8&param9=value9&param10=value10';
 
         $click = MessageLinksClick::create([

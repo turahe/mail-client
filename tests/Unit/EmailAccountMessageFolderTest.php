@@ -17,8 +17,11 @@ class EmailAccountMessageFolderTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $testAccount;
+
     protected $testFolder;
+
     protected $testMessage;
 
     protected function setUp(): void
@@ -68,7 +71,7 @@ class EmailAccountMessageFolderTest extends TestCase
     {
         // Create initial relationship
         $this->testMessage->folders()->attach($this->testFolder->id);
-        
+
         $anotherFolder = EmailAccountFolderFactory::new()->create([
             'email_account_id' => $this->testAccount->id,
         ]);
@@ -81,7 +84,7 @@ class EmailAccountMessageFolderTest extends TestCase
             'message_id' => $this->testMessage->id,
             'folder_id' => $this->testFolder->id,
         ]);
-        
+
         $this->assertDatabaseHas('email_account_message_folders', [
             'message_id' => $this->testMessage->id,
             'folder_id' => $anotherFolder->id,
@@ -117,14 +120,14 @@ class EmailAccountMessageFolderTest extends TestCase
     #[Test]
     public function it_does_not_have_timestamps(): void
     {
-        $pivot = new EmailAccountMessageFolder();
+        $pivot = new EmailAccountMessageFolder;
         $this->assertFalse($pivot->timestamps);
     }
 
     #[Test]
     public function it_casts_attributes_correctly(): void
     {
-        $pivot = new EmailAccountMessageFolder();
+        $pivot = new EmailAccountMessageFolder;
         $casts = $pivot->getCasts();
 
         $this->assertEquals('string', $casts['message_id']);
@@ -134,14 +137,14 @@ class EmailAccountMessageFolderTest extends TestCase
     #[Test]
     public function it_uses_correct_table(): void
     {
-        $pivot = new EmailAccountMessageFolder();
+        $pivot = new EmailAccountMessageFolder;
         $this->assertEquals('email_account_message_folders', $pivot->getTable());
     }
 
     #[Test]
     public function it_is_a_pivot_model(): void
     {
-        $pivot = new EmailAccountMessageFolder();
+        $pivot = new EmailAccountMessageFolder;
         $this->assertInstanceOf(\Illuminate\Database\Eloquent\Relations\Pivot::class, $pivot);
     }
 

@@ -14,6 +14,7 @@ class PredefinedMailTemplateTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $anotherUser;
 
     protected function setUp(): void
@@ -177,7 +178,7 @@ class PredefinedMailTemplateTest extends TestCase
         ]);
 
         $sharedTemplates = PredefinedMailTemplate::shared()->get();
-        
+
         $this->assertCount(2, $sharedTemplates);
         $sharedIds = $sharedTemplates->pluck('id')->toArray();
         $this->assertContains($sharedTemplate1->id, $sharedIds);
@@ -190,14 +191,14 @@ class PredefinedMailTemplateTest extends TestCase
     {
         $expectedFillable = ['name', 'subject', 'body', 'is_shared'];
 
-        $template = new PredefinedMailTemplate();
+        $template = new PredefinedMailTemplate;
         $this->assertEquals($expectedFillable, $template->getFillable());
     }
 
     #[Test]
     public function it_casts_attributes_correctly(): void
     {
-        $template = new PredefinedMailTemplate();
+        $template = new PredefinedMailTemplate;
         $casts = $template->getCasts();
 
         $this->assertEquals('boolean', $casts['is_shared']);
@@ -249,14 +250,14 @@ class PredefinedMailTemplateTest extends TestCase
     #[Test]
     public function it_uses_correct_table(): void
     {
-        $template = new PredefinedMailTemplate();
+        $template = new PredefinedMailTemplate;
         $this->assertEquals('predefined_mail_templates', $template->getTable());
     }
 
     #[Test]
     public function it_has_timestamps(): void
     {
-        $template = new PredefinedMailTemplate();
+        $template = new PredefinedMailTemplate;
         $this->assertTrue($template->timestamps);
     }
 

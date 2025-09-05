@@ -43,7 +43,7 @@ class MessageLinksClickFactory extends Factory
     public function https(): static
     {
         return $this->state(fn (array $attributes) => [
-            'url' => 'https://' . $this->faker->domainName . '/' . $this->faker->slug,
+            'url' => 'https://'.$this->faker->domainName.'/'.$this->faker->slug,
         ]);
     }
 
@@ -53,7 +53,7 @@ class MessageLinksClickFactory extends Factory
     public function http(): static
     {
         return $this->state(fn (array $attributes) => [
-            'url' => 'http://' . $this->faker->domainName . '/' . $this->faker->slug,
+            'url' => 'http://'.$this->faker->domainName.'/'.$this->faker->slug,
         ]);
     }
 
@@ -63,7 +63,7 @@ class MessageLinksClickFactory extends Factory
     public function withParameters(): static
     {
         return $this->state(fn (array $attributes) => [
-            'url' => $this->faker->url . '?param1=value1&param2=value2',
+            'url' => $this->faker->url.'?param1=value1&param2=value2',
         ]);
     }
 
@@ -73,7 +73,7 @@ class MessageLinksClickFactory extends Factory
     public function longUrl(): static
     {
         return $this->state(fn (array $attributes) => [
-            'url' => 'https://example.com/very/long/path/with/many/segments?' . 
+            'url' => 'https://example.com/very/long/path/with/many/segments?'.
                      'param1=value1&param2=value2&param3=value3&param4=value4',
         ]);
     }

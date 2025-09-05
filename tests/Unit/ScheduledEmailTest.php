@@ -2,7 +2,6 @@
 
 namespace Turahe\MailClient\Tests\Unit;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\Factories\UserFactory;
@@ -18,6 +17,7 @@ class ScheduledEmailTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $testAccount;
 
     protected function setUp(): void
@@ -372,7 +372,7 @@ class ScheduledEmailTest extends TestCase
     #[Test]
     public function it_has_correct_casts(): void
     {
-        $scheduledEmail = new ScheduledEmail();
+        $scheduledEmail = new ScheduledEmail;
         $casts = $scheduledEmail->getCasts();
 
         $this->assertEquals('datetime', $casts['scheduled_at']);
@@ -397,14 +397,14 @@ class ScheduledEmailTest extends TestCase
     #[Test]
     public function it_uses_correct_table(): void
     {
-        $scheduledEmail = new ScheduledEmail();
+        $scheduledEmail = new ScheduledEmail;
         $this->assertEquals('scheduled_emails', $scheduledEmail->getTable());
     }
 
     #[Test]
     public function it_allows_all_attributes_to_be_mass_assigned(): void
     {
-        $scheduledEmail = new ScheduledEmail();
+        $scheduledEmail = new ScheduledEmail;
         $this->assertEquals([], $scheduledEmail->getGuarded());
     }
 

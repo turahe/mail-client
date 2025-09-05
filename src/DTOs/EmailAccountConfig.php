@@ -35,7 +35,7 @@ readonly class EmailAccountConfig
     private function validate(): void
     {
         // Validate email
-        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+        if (! filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             throw new \InvalidArgumentException('Invalid email address');
         }
 
@@ -54,7 +54,7 @@ readonly class EmailAccountConfig
      */
     public function getDefaultImapServer(): string
     {
-        return match($this->connectionType) {
+        return match ($this->connectionType) {
             ConnectionType::Gmail => 'imap.gmail.com',
             ConnectionType::Outlook => 'outlook.office365.com',
             ConnectionType::Imap => 'localhost',
@@ -66,7 +66,7 @@ readonly class EmailAccountConfig
      */
     public function getDefaultSmtpServer(): string
     {
-        return match($this->connectionType) {
+        return match ($this->connectionType) {
             ConnectionType::Gmail => 'smtp.gmail.com',
             ConnectionType::Outlook => 'smtp.office365.com',
             ConnectionType::Imap => 'localhost',
@@ -189,4 +189,4 @@ readonly class EmailAccountConfig
             modelType: $changes['model_type'] ?? $this->modelType,
         );
     }
-} 
+}

@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Turahe\MailClient\Models\PredefinedMailTemplate;
-use Turahe\MailClient\Tests\Factories\PredefinedMailTemplateFactory;
 use Turahe\MailClient\Tests\TestCase;
 
 class MailTemplateWorkflowTest extends TestCase
@@ -74,7 +73,7 @@ class MailTemplateWorkflowTest extends TestCase
 
         // Clone template for customization
         $clonedTemplate = PredefinedMailTemplate::create([
-            'name' => $template->name . ' - Custom',
+            'name' => $template->name.' - Custom',
             'subject' => $template->subject,
             'body' => str_replace('Acme Corp', 'Custom Company', $template->body),
             'is_shared' => false,
@@ -235,7 +234,7 @@ Best regards,
         $this->assertStringContainsString('<!DOCTYPE html>', $htmlTemplate->body);
         $this->assertStringContainsString('<style>', $htmlTemplate->body);
         $this->assertStringContainsString('<table', $htmlTemplate->body);
-        
+
         $this->assertStringNotContainsString('<html>', $plainTextTemplate->body);
         $this->assertStringNotContainsString('<p>', $plainTextTemplate->body);
         $this->assertStringContainsString('Dear {{recipient_name}}', $plainTextTemplate->body);
@@ -245,8 +244,8 @@ Best regards,
 
         // Test template duplication for different purposes
         $duplicatedTemplate = PredefinedMailTemplate::create([
-            'name' => $htmlTemplate->name . ' - Copy',
-            'subject' => $htmlTemplate->subject . ' (Copy)',
+            'name' => $htmlTemplate->name.' - Copy',
+            'subject' => $htmlTemplate->subject.' (Copy)',
             'body' => $htmlTemplate->body,
             'is_shared' => false,
         ]);
@@ -264,7 +263,7 @@ Best regards,
         $sharedTemplates = PredefinedMailTemplate::shared()->get();
         foreach ($sharedTemplates as $template) {
             $template->update([
-                'body' => $template->body . "\n\n--- \nThis is an automated message."
+                'body' => $template->body."\n\n--- \nThis is an automated message.",
             ]);
         }
 

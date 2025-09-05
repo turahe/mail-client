@@ -12,7 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('scheduled_emails', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            if (config('userstamps.users_table_column_type') === 'bigincrements') {
+                $table->id();
+                $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccount::class, 'email_account_id')->nullable()->constrained('email_accounts');
+                $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'related_message_id')->nullable()->constrained('email_account_messages');  // for reply and forward
+            }
+            if (config('userstamps.users_table_column_type') === 'ulid') {
+                $table->ulid('id')->primary();
+                $table->ulid('email_account_id')->nullable();
+                $table->foreign('email_account_id')->references('id')->on('email_accounts');
+                $table->ulid('related_message_id')->nullable();
+                $table->foreign('related_message_id')->references('id')->on('email_account_messages');
+            }
+            if (config('userstamps.users_table_column_type') === 'uuid') {
+                $table->uuid('id')->primary();
+                $table->foreignUuidFor(\Turahe\MailClient\Models\EmailAccount::class, 'email_account_id')->nullable()->constrained('email_accounts');
+                $table->foreignUuidFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'related_message_id')->nullable()->constrained('email_account_messages');  // for reply and forward
+            }
             $table->string('subject');
             $table->mediumText('html_body');
             $table->text('to');
@@ -25,17 +41,46 @@ return new class extends Migration
             $table->text('fail_reason')->nullable();
             $table->dateTime('retry_after')->index()->nullable();
             $table->unsignedInteger('retries')->index()->default(0);
-            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccount::class, 'email_account_id')->nullable()->constrained('email_accounts');
-            $table->foreignIdFor(\Turahe\MailClient\Models\EmailAccountMessage::class, 'related_message_id')->nullable()->constrained('email_account_messages');  // for reply and forward
             $table->dateTime('sent_at')->nullable();
             $table->dateTime('scheduled_at')->index();
 
-            $table->userstamps();
-            $table->softUserstamps();
+            // Create userstamp columns with correct data types
+            if (config('userstamps.users_table_column_type') === 'bigincrements') {
+                $table->unsignedBigInteger('created_by')->nullable()->index();
+                $table->unsignedBigInteger('updated_by')->nullable()->index();
+                $table->unsignedBigInteger('deleted_by')->nullable()->index();
+            }
+            if (config('userstamps.users_table_column_type') === 'ulid') {
+                $table->ulid('created_by')->nullable()->index();
+                $table->ulid('updated_by')->nullable()->index();
+                $table->ulid('deleted_by')->nullable()->index();
+            }
+            if (config('userstamps.users_table_column_type') === 'uuid') {
+                $table->uuid('created_by')->nullable()->index();
+                $table->uuid('updated_by')->nullable()->index();
+                $table->uuid('deleted_by')->nullable()->index();
+            }
 
-            $table->integer('deleted_at')->index()->nullable();
-            $table->integer('created_at')->index()->nullable();
-            $table->integer('updated_at')->index()->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+
+            // Add foreign key constraints for userstamps
+            if (config('userstamps.users_table_column_type') === 'bigincrements') {
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('deleted_by')->references('id')->on('users')->onDelete('set null');
+            }
+
+            if (config('userstamps.users_table_column_type') === 'ulid') {
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('deleted_by')->references('id')->on('users')->onDelete('set null');
+            }
+            if (config('userstamps.users_table_column_type') === 'uuid') {
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('deleted_by')->references('id')->on('users')->onDelete('set null');
+            }
         });
     }
 

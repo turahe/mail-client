@@ -4,13 +4,13 @@ namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Turahe\Core\Concerns\HasConfigurablePrimaryKey;
 use Turahe\MailClient\Support\EmailAccountMessageBody;
 use Turahe\Media\HasMedia;
 
@@ -23,8 +23,8 @@ use Turahe\Media\HasMedia;
  */
 class EmailAccountMessage extends Model
 {
+    use HasConfigurablePrimaryKey;
     use HasMedia;
-    use HasUlids;
 
     const TAGS_TYPE = 'messages';
 
@@ -118,7 +118,7 @@ class EmailAccountMessage extends Model
                 'message_id'
             );
         }
-        
+
         // Return empty morph relationship if class doesn't exist
         return $this->morphedByMany(
             \Turahe\MailClient\Tests\Models\TestModel::class,
@@ -142,7 +142,7 @@ class EmailAccountMessage extends Model
                 'message_id'
             );
         }
-        
+
         // Return empty morph relationship if class doesn't exist
         return $this->morphedByMany(
             \Turahe\MailClient\Tests\Models\TestModel::class,
@@ -166,7 +166,7 @@ class EmailAccountMessage extends Model
                 'message_id'
             );
         }
-        
+
         // Return empty morph relationship if class doesn't exist
         return $this->morphedByMany(
             \Turahe\MailClient\Tests\Models\TestModel::class,

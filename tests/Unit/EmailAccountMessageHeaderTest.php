@@ -16,7 +16,9 @@ class EmailAccountMessageHeaderTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $testAccount;
+
     protected $testMessage;
 
     protected function setUp(): void
@@ -119,7 +121,7 @@ class EmailAccountMessageHeaderTest extends TestCase
     #[Test]
     public function it_does_not_have_timestamps(): void
     {
-        $header = new EmailAccountMessageHeader();
+        $header = new EmailAccountMessageHeader;
         $this->assertFalse($header->timestamps);
     }
 
@@ -128,14 +130,14 @@ class EmailAccountMessageHeaderTest extends TestCase
     {
         $expectedFillable = ['name', 'value', 'header_type', 'message_id'];
 
-        $header = new EmailAccountMessageHeader();
+        $header = new EmailAccountMessageHeader;
         $this->assertEquals($expectedFillable, $header->getFillable());
     }
 
     #[Test]
     public function it_casts_attributes_correctly(): void
     {
-        $header = new EmailAccountMessageHeader();
+        $header = new EmailAccountMessageHeader;
         $casts = $header->getCasts();
 
         $this->assertEquals('string', $casts['message_id']);
@@ -158,7 +160,7 @@ class EmailAccountMessageHeaderTest extends TestCase
     #[Test]
     public function it_can_create_message_id_header(): void
     {
-        $messageId = '<' . $this->faker->uuid . '@example.com>';
+        $messageId = '<'.$this->faker->uuid.'@example.com>';
         $header = EmailAccountMessageHeader::create([
             'message_id' => $this->testMessage->id,
             'name' => 'Message-ID',
@@ -173,7 +175,7 @@ class EmailAccountMessageHeaderTest extends TestCase
     #[Test]
     public function it_can_create_in_reply_to_header(): void
     {
-        $replyToId = '<' . $this->faker->uuid . '@example.com>';
+        $replyToId = '<'.$this->faker->uuid.'@example.com>';
         $header = EmailAccountMessageHeader::create([
             'message_id' => $this->testMessage->id,
             'name' => 'In-Reply-To',
@@ -233,7 +235,7 @@ class EmailAccountMessageHeaderTest extends TestCase
     #[Test]
     public function it_uses_correct_table(): void
     {
-        $header = new EmailAccountMessageHeader();
+        $header = new EmailAccountMessageHeader;
         $this->assertEquals('email_account_message_headers', $header->getTable());
     }
 

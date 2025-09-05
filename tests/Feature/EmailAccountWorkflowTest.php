@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Turahe\MailClient\Enums\ConnectionType;
-use Turahe\MailClient\Enums\EmailAccountType;
 use Turahe\MailClient\Enums\SyncState;
 use Turahe\MailClient\Models\EmailAccount;
 use Turahe\MailClient\Models\EmailAccountFolder;
@@ -100,8 +99,8 @@ class EmailAccountWorkflowTest extends TestCase
         $this->assertCount(2, $emailAccount->messages);
         $this->assertCount(1, $inboxFolder->messages);
         $this->assertCount(1, $sentFolder->messages);
-        
-        // Test account relationships  
+
+        // Test account relationships
         $this->assertFalse($emailAccount->isSyncDisabled());
         $this->assertEquals('IMAP', $emailAccount->connection_type->value);
 
@@ -117,7 +116,7 @@ class EmailAccountWorkflowTest extends TestCase
         // Test account deletion (should cascade)
         $accountId = $emailAccount->id;
         $emailAccount->delete();
-        
+
         $this->assertSoftDeleted('email_accounts', ['id' => $accountId]);
     }
 
@@ -165,13 +164,13 @@ class EmailAccountWorkflowTest extends TestCase
         // Test message queries
         $readMessages = $emailAccount->messages()->read()->get();
         $unreadMessages = $emailAccount->messages()->unread()->get();
-        
+
         $this->assertTrue($readMessages->count() > 0);
         $this->assertTrue($unreadMessages->count() > 0);
         $this->assertEquals(5, $readMessages->count() + $unreadMessages->count());
     }
 
-    #[Test] 
+    #[Test]
     public function it_can_handle_complex_folder_hierarchy(): void
     {
         $emailAccount = EmailAccountFactory::new()->create([
@@ -199,7 +198,7 @@ class EmailAccountWorkflowTest extends TestCase
 
         $childFolder2 = EmailAccountFolder::create([
             'email_account_id' => $emailAccount->id,
-            'name' => 'Projects/Client-B', 
+            'name' => 'Projects/Client-B',
             'display_name' => 'Client B',
             'remote_id' => 'Projects/Client-B',
             'parent_id' => $parentFolder->id,
@@ -233,7 +232,7 @@ class EmailAccountWorkflowTest extends TestCase
         // Test folder-specific message retrieval
         $clientAMessages = $childFolder1->messages;
         $clientBMessages = $childFolder2->messages;
-        
+
         $this->assertCount(1, $clientAMessages);
         $this->assertCount(1, $clientBMessages);
         $this->assertEquals('Client A Project Update', $clientAMessages->first()->subject);

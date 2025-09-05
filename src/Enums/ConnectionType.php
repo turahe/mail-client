@@ -13,7 +13,7 @@ enum ConnectionType: string
      */
     public function getDisplayName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Gmail => 'Gmail',
             self::Outlook => 'Outlook',
             self::Imap => 'IMAP',
@@ -25,7 +25,7 @@ enum ConnectionType: string
      */
     public function supportsOAuth(): bool
     {
-        return match($this) {
+        return match ($this) {
             self::Gmail, self::Outlook => true,
             self::Imap => false,
         };
@@ -36,7 +36,7 @@ enum ConnectionType: string
      */
     public function getDefaultPorts(): array
     {
-        return match($this) {
+        return match ($this) {
             self::Gmail => ['imap' => 993, 'smtp' => 587],
             self::Outlook => ['imap' => 993, 'smtp' => 587],
             self::Imap => ['imap' => 993, 'smtp' => 587],

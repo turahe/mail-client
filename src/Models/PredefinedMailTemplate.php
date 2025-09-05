@@ -3,13 +3,13 @@
 namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Turahe\Core\Concerns\HasConfigurablePrimaryKey;
 
 class PredefinedMailTemplate extends Model
 {
-    use HasFactory, HasUlids;
+    use HasConfigurablePrimaryKey, HasFactory;
 
     /**
      * Create a new factory instance for the model.

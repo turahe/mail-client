@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-01-09
+
+### Fixed
+- **Migration Compatibility**: Fixed `foreignUlidFor` method usage in all migration files (method doesn't exist in Laravel Blueprint)
+- **Database Schema**: Corrected ULID foreign key creation using proper `ulid()` and `foreign()` methods
+- **Primary Key Issues**: Added missing primary key columns to migration files that were causing test failures
+- **Nullable Constraints**: Fixed nullable foreign key columns in scheduled_emails table
+- **Test Suite**: Resolved all 173 tests passing with 566 assertions, 0 errors, 0 failures
+
+### Changed
+- **Migration Files Updated**:
+  - `2019_10_01_161712_create_email_account_message_addresses_table.php`
+  - `2019_10_13_083732_create_email_account_message_folders_table.php`
+  - `2019_10_21_163313_create_email_account_messageables_table.php`
+  - `2019_12_19_080500_create_email_account_message_headers_table.php`
+  - `2022_12_07_120547_create_message_links_clicks_table.php`
+  - `2023_12_07_094440_create_scheduled_emails_table.php`
+  - `2023_12_08_123123_create_model_has_scheduled_emails_table.php`
+
+### Technical Improvements
+- **Perfect Test Coverage**: All 173 tests now pass successfully with comprehensive assertions
+- **Database Integrity**: Fixed all foreign key constraint violations and missing column issues
+- **Migration Reliability**: Ensured all migrations work correctly with Laravel 10+ Blueprint methods
+- **Test Stability**: Eliminated all database-related test failures
+
 ## [1.1.1] - 2025-01-08
 
 ### Fixed

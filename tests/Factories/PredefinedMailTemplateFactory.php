@@ -14,7 +14,7 @@ class PredefinedMailTemplateFactory extends Factory
         return [
             'name' => $this->faker->words(3, true),
             'subject' => $this->faker->sentence,
-            'body' => '<p>' . $this->faker->paragraph . '</p>',
+            'body' => '<p>'.$this->faker->paragraph.'</p>',
             'is_shared' => false,
         ];
     }
@@ -38,8 +38,6 @@ class PredefinedMailTemplateFactory extends Factory
             'is_shared' => false,
         ]);
     }
-
-
 
     /**
      * Create a welcome email template.
@@ -72,7 +70,7 @@ class PredefinedMailTemplateFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'name' => 'Newsletter Template',
-            'subject' => 'Monthly Newsletter - ' . now()->format('F Y'),
+            'subject' => 'Monthly Newsletter - '.now()->format('F Y'),
             'body' => '<h2>Newsletter</h2><p>Here are the latest updates...</p>',
         ]);
     }
@@ -116,13 +114,13 @@ class PredefinedMailTemplateFactory extends Factory
                     </head>
                     <body>
                         <div class="header">
-                            <h1>' . $this->faker->sentence . '</h1>
+                            <h1>'.$this->faker->sentence.'</h1>
                         </div>
                         <div class="content">
-                            <p>' . $this->faker->paragraph . '</p>
+                            <p>'.$this->faker->paragraph.'</p>
                             <ul>
-                                <li>' . $this->faker->sentence . '</li>
-                                <li>' . $this->faker->sentence . '</li>
+                                <li>'.$this->faker->sentence.'</li>
+                                <li>'.$this->faker->sentence.'</li>
                             </ul>
                         </div>
                     </body>

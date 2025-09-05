@@ -3,12 +3,12 @@
 namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Lang;
+use Turahe\Core\Concerns\HasConfigurablePrimaryKey;
 use Turahe\MailClient\Client\FolderIdentifier;
 use Turahe\MailClient\Enums\ConnectionType;
 use Turahe\MailClient\Support\EmailAccountFolderCollection;
@@ -17,7 +17,7 @@ use Turahe\UserStamps\Concerns\HasUserStamps;
 
 class EmailAccountFolder extends Model
 {
-    use HasUlids;
+    use HasConfigurablePrimaryKey;
     use HasUserStamps;
     use SoftDeletes;
 

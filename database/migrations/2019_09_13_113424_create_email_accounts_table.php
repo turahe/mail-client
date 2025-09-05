@@ -13,10 +13,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_accounts', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            if (config('userstamps.users_table_column_type') === 'bigincrements') {
+                $table->id();
+                $table->nullableMorphs('model');
+            }
+            if (config('userstamps.users_table_column_type') === 'ulid') {
+                $table->ulid('id')->primary();
+                $table->nullableUlidMorphs('model');
+            }
+            if (config('userstamps.users_table_column_type') === 'uuid') {
+                $table->uuid('id')->primary();
+                $table->nullableUuidMorphs('model');
+            }
             $table->string('email')->unique();
             $table->string('alias_email')->nullable();
-            $table->ulidMorphs('model');
             $table->enum('connection_type', array_column(\Turahe\MailClient\Enums\ConnectionType::cases(), 'value'))->nullable();
             $table->unsignedBigInteger('access_token_id')->nullable();
             $table->unsignedBigInteger('sent_folder_id')->nullable();
@@ -41,12 +51,43 @@ return new class extends Migration
             $table->unsignedInteger('smtp_port')->nullable()->comment('IMAP');
             $table->string('smtp_encryption', 8)->nullable()->comment('IMAP');
 
-            $table->userstamps();
-            $table->softUserstamps();
+            // Create userstamp columns with correct data types
+            if (config('userstamps.users_table_column_type') === 'bigincrements') {
+                $table->unsignedBigInteger('created_by')->nullable()->index();
+                $table->unsignedBigInteger('updated_by')->nullable()->index();
+                $table->unsignedBigInteger('deleted_by')->nullable()->index();
+            }
+            if (config('userstamps.users_table_column_type') === 'ulid') {
+                $table->ulid('created_by')->nullable()->index();
+                $table->ulid('updated_by')->nullable()->index();
+                $table->ulid('deleted_by')->nullable()->index();
+            }
+            if (config('userstamps.users_table_column_type') === 'uuid') {
+                $table->uuid('created_by')->nullable()->index();
+                $table->uuid('updated_by')->nullable()->index();
+                $table->uuid('deleted_by')->nullable()->index();
+            }
 
-            $table->integer('deleted_at')->index()->nullable();
-            $table->integer('created_at')->index()->nullable();
-            $table->integer('updated_at')->index()->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+
+            // Add foreign key constraints for userstamps
+            if (config('userstamps.users_table_column_type') === 'bigincrements') {
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('deleted_by')->references('id')->on('users')->onDelete('set null');
+            }
+
+            if (config('userstamps.users_table_column_type') === 'ulid') {
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('deleted_by')->references('id')->on('users')->onDelete('set null');
+            }
+            if (config('userstamps.users_table_column_type') === 'uuid') {
+                $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+                $table->foreign('deleted_by')->references('id')->on('users')->onDelete('set null');
+            }
         });
     }
 

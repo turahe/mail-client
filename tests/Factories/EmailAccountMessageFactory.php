@@ -17,7 +17,7 @@ class EmailAccountMessageFactory extends Factory
             'remote_id' => $this->faker->unique()->uuid,
             'message_id' => $this->faker->unique()->uuid,
             'subject' => $this->faker->sentence,
-            'html_body' => '<p>' . $this->faker->paragraph . '</p>',
+            'html_body' => '<p>'.$this->faker->paragraph.'</p>',
             'text_body' => $this->faker->paragraph,
             'is_read' => false,
             'is_draft' => false,
@@ -76,4 +76,4 @@ class EmailAccountMessageFactory extends Factory
             'date' => $date,
         ]);
     }
-} 
+}

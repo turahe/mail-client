@@ -4,9 +4,11 @@ namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Turahe\Core\Concerns\HasConfigurablePrimaryKey;
 
 class EmailAccountMessageFolder extends Pivot
 {
+    use HasConfigurablePrimaryKey;
     use HasFactory;
 
     /**

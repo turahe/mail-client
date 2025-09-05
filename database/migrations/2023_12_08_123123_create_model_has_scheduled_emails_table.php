@@ -12,9 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('model_has_scheduled_emails', function (Blueprint $table) {
-            $table->foreignIdFor(\Turahe\MailClient\Models\ScheduledEmail::class, 'scheduled_email_id')->constrained('scheduled_emails')->cascadeOnDelete();
-
-            $table->ulidMorphs('model');
+            if (config('userstamps.users_table_column_type') === 'bigincrements') {
+                $table->foreignIdFor(\Turahe\MailClient\Models\ScheduledEmail::class, 'scheduled_email_id')->constrained('scheduled_emails')->cascadeOnDelete();
+                $table->morphs('model');
+            }
+            if (config('userstamps.users_table_column_type') === 'ulid') {
+                $table->ulid('scheduled_email_id');
+                $table->foreign('scheduled_email_id')->references('id')->on('scheduled_emails')->cascadeOnDelete();
+                $table->ulidMorphs('model');
+            }
+            if (config('userstamps.users_table_column_type') === 'uuid') {
+                $table->foreignUuidFor(\Turahe\MailClient\Models\ScheduledEmail::class, 'scheduled_email_id')->constrained('scheduled_emails')->cascadeOnDelete();
+                $table->uuidMorphs('model');
+            }
 
             $table->primary(['scheduled_email_id', 'model_id',  'model_type'], 'model_has_scheduled_emails_email_model_type');
         });

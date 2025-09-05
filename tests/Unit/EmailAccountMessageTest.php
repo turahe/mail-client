@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Turahe\MailClient\Models\EmailAccount;
-use Turahe\MailClient\Models\EmailAccountFolder;
 use Turahe\MailClient\Models\EmailAccountMessage;
 use Turahe\MailClient\Models\EmailAccountMessageAddress;
 use Turahe\MailClient\Models\EmailAccountMessageHeader;
@@ -22,7 +21,9 @@ class EmailAccountMessageTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $testAccount;
+
     protected $testFolder;
 
     protected function setUp(): void
@@ -54,7 +55,7 @@ class EmailAccountMessageTest extends TestCase
             'remote_id' => $this->faker->uuid,
             'message_id' => $this->faker->uuid,
             'subject' => $this->faker->sentence,
-            'html_body' => '<p>' . $this->faker->paragraph . '</p>',
+            'html_body' => '<p>'.$this->faker->paragraph.'</p>',
             'text_body' => $this->faker->paragraph,
             'is_read' => false,
             'is_draft' => false,
@@ -311,14 +312,14 @@ class EmailAccountMessageTest extends TestCase
             'is_draft', 'date', 'is_sent_via_app', 'hash',
         ];
 
-        $message = new EmailAccountMessage();
+        $message = new EmailAccountMessage;
         $this->assertEquals($expectedFillable, $message->getFillable());
     }
 
     #[Test]
     public function it_casts_attributes_correctly(): void
     {
-        $message = new EmailAccountMessage();
+        $message = new EmailAccountMessage;
         $casts = $message->getCasts();
 
         $this->assertEquals('datetime', $casts['date']);
@@ -331,21 +332,21 @@ class EmailAccountMessageTest extends TestCase
     #[Test]
     public function it_has_correct_timeline_sort_column(): void
     {
-        $message = new EmailAccountMessage();
+        $message = new EmailAccountMessage;
         $this->assertEquals('date', $message->getTimelineSortColumn());
     }
 
     #[Test]
     public function it_has_correct_timeline_relation(): void
     {
-        $message = new EmailAccountMessage();
+        $message = new EmailAccountMessage;
         $this->assertEquals('emails', $message->getTimelineRelation());
     }
 
     #[Test]
     public function it_has_correct_timeline_component(): void
     {
-        $message = new EmailAccountMessage();
+        $message = new EmailAccountMessage;
         $this->assertEquals('record-tab-timeline-email', $message->getTimelineComponent());
     }
 

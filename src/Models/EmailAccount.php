@@ -4,7 +4,6 @@ namespace Turahe\MailClient\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Carbon;
+use Turahe\Core\Concerns\HasConfigurablePrimaryKey;
 use Turahe\MailClient\Client\Client;
 use Turahe\MailClient\Client\ClientManager;
 use Turahe\MailClient\Client\Compose\Message;
@@ -29,7 +29,7 @@ use Turahe\UserStamps\Concerns\HasUserStamps;
 class EmailAccount extends Model
 {
     use EmailAccountImap;
-    use HasUlids;
+    use HasConfigurablePrimaryKey;
     use HasUserStamps;
     use SoftDeletes;
 
@@ -148,7 +148,7 @@ class EmailAccount extends Model
      */
     public function isInitialSyncPerformed(): bool
     {
-        return !empty($this->last_sync_at);
+        return ! empty($this->last_sync_at);
     }
 
     /**
@@ -156,7 +156,7 @@ class EmailAccount extends Model
      */
     public function isSyncOnHold(): bool
     {
-        if (!$resumeDate = $this->getSyncResumeDate()) {
+        if (! $resumeDate = $this->getSyncResumeDate()) {
             return false;
         }
 
@@ -277,7 +277,7 @@ class EmailAccount extends Model
      */
     public function isPersonal(): bool
     {
-        return !$this->isShared();
+        return ! $this->isShared();
     }
 
     /**
@@ -382,7 +382,7 @@ class EmailAccount extends Model
      */
     public function canSendEmail(): bool
     {
-        return !($this->requires_auth || $this->isSyncStopped());
+        return ! ($this->requires_auth || $this->isSyncStopped());
     }
 
     /**
@@ -476,7 +476,7 @@ class EmailAccount extends Model
      */
     public function setAuthRequired(bool $value = true): static
     {
-        if (!is_null($this->oAuthAccount)) {
+        if (! is_null($this->oAuthAccount)) {
             $this->oAuthAccount->setAuthRequired($value);
         }
 

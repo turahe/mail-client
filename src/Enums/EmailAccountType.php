@@ -12,7 +12,7 @@ enum EmailAccountType: string
      */
     public function getDisplayName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Personal => 'Personal',
             self::Shared => 'Shared',
         };
@@ -39,7 +39,7 @@ enum EmailAccountType: string
      */
     public function getIconClass(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Personal => 'fas fa-user',
             self::Shared => 'fas fa-users',
         };

@@ -13,7 +13,7 @@ enum SyncState: string
      */
     public function getDisplayName(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Disabled => 'Disabled',
             self::Stopped => 'Stopped',
             self::Enabled => 'Enabled',
@@ -33,7 +33,7 @@ enum SyncState: string
      */
     public function isInactive(): bool
     {
-        return match($this) {
+        return match ($this) {
             self::Disabled, self::Stopped => true,
             self::Enabled => false,
         };
@@ -44,7 +44,7 @@ enum SyncState: string
      */
     public function getColorClass(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Disabled => 'text-red-500',
             self::Stopped => 'text-yellow-500',
             self::Enabled => 'text-green-500',

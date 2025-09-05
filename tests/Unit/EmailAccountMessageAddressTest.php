@@ -16,7 +16,9 @@ class EmailAccountMessageAddressTest extends TestCase
     use WithFaker;
 
     protected $testUser;
+
     protected $testAccount;
+
     protected $testMessage;
 
     protected function setUp(): void
@@ -84,18 +86,18 @@ class EmailAccountMessageAddressTest extends TestCase
         ]);
 
         $newName = 'Updated Name';
-        
+
         // Since this model doesn't have a primary key, we'll test that the attributes can be changed
         $address->name = $newName;
         $this->assertEquals($newName, $address->name);
-        
+
         // Test that we can create another address with updated data
         $newAddress = EmailAccountMessageAddress::factory()->forMessage($this->testMessage)->create([
             'address' => 'updated@example.com',
             'name' => $newName,
             'address_type' => 'cc',
         ]);
-        
+
         $this->assertEquals($newName, $newAddress->name);
         $this->assertEquals('updated@example.com', $newAddress->address);
     }
@@ -118,7 +120,7 @@ class EmailAccountMessageAddressTest extends TestCase
     #[Test]
     public function it_does_not_have_timestamps(): void
     {
-        $address = new EmailAccountMessageAddress();
+        $address = new EmailAccountMessageAddress;
         $this->assertFalse($address->timestamps);
     }
 
@@ -127,14 +129,14 @@ class EmailAccountMessageAddressTest extends TestCase
     {
         $expectedFillable = ['address', 'name', 'address_type', 'message_id'];
 
-        $address = new EmailAccountMessageAddress();
+        $address = new EmailAccountMessageAddress;
         $this->assertEquals($expectedFillable, $address->getFillable());
     }
 
     #[Test]
     public function it_casts_attributes_correctly(): void
     {
-        $address = new EmailAccountMessageAddress();
+        $address = new EmailAccountMessageAddress;
         $casts = $address->getCasts();
 
         $this->assertEquals('string', $casts['message_id']);
@@ -226,7 +228,7 @@ class EmailAccountMessageAddressTest extends TestCase
     #[Test]
     public function it_uses_correct_table(): void
     {
-        $address = new EmailAccountMessageAddress();
+        $address = new EmailAccountMessageAddress;
         $this->assertEquals('email_account_message_addresses', $address->getTable());
     }
 }

@@ -61,7 +61,7 @@ class EmailAccountMessageHeaderFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'name' => 'Message-ID',
-            'value' => '<' . $this->faker->uuid . '@' . $this->faker->domainName . '>',
+            'value' => '<'.$this->faker->uuid.'@'.$this->faker->domainName.'>',
             'header_type' => 'id',
         ]);
     }
@@ -73,7 +73,7 @@ class EmailAccountMessageHeaderFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'name' => 'In-Reply-To',
-            'value' => '<' . $this->faker->uuid . '@' . $this->faker->domainName . '>',
+            'value' => '<'.$this->faker->uuid.'@'.$this->faker->domainName.'>',
             'header_type' => 'reply',
         ]);
     }
@@ -85,7 +85,7 @@ class EmailAccountMessageHeaderFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'name' => 'References',
-            'value' => '<' . $this->faker->uuid . '@' . $this->faker->domainName . '> <' . $this->faker->uuid . '@' . $this->faker->domainName . '>',
+            'value' => '<'.$this->faker->uuid.'@'.$this->faker->domainName.'> <'.$this->faker->uuid.'@'.$this->faker->domainName.'>',
             'header_type' => 'references',
         ]);
     }
@@ -108,7 +108,7 @@ class EmailAccountMessageHeaderFactory extends Factory
     public function custom(): static
     {
         return $this->state(fn (array $attributes) => [
-            'name' => 'X-' . $this->faker->word,
+            'name' => 'X-'.$this->faker->word,
             'value' => $this->faker->sentence,
             'header_type' => 'custom',
         ]);
@@ -133,7 +133,7 @@ class EmailAccountMessageHeaderFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'name' => 'From',
-            'value' => $this->faker->name . ' <' . $this->faker->email . '>',
+            'value' => $this->faker->name.' <'.$this->faker->email.'>',
             'header_type' => 'standard',
         ]);
     }
@@ -145,7 +145,7 @@ class EmailAccountMessageHeaderFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'name' => 'To',
-            'value' => $this->faker->name . ' <' . $this->faker->email . '>',
+            'value' => $this->faker->name.' <'.$this->faker->email.'>',
             'header_type' => 'standard',
         ]);
     }

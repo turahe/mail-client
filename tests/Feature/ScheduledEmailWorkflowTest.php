@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
-use Turahe\MailClient\Models\EmailAccount;
 use Turahe\MailClient\Models\ScheduledEmail;
 use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
 use Turahe\MailClient\Tests\Factories\ScheduledEmailFactory;
@@ -17,6 +16,7 @@ class ScheduledEmailWorkflowTest extends TestCase
     use WithFaker;
 
     protected $user;
+
     protected $emailAccount;
 
     protected function setUp(): void
@@ -80,7 +80,7 @@ class ScheduledEmailWorkflowTest extends TestCase
 
         // Simulate processing workflow
         $this->assertCount(2, ScheduledEmail::pending()->get());
-        
+
         // Mark as sending
         $dueEmail->markAsSending();
         $this->assertEquals('sending', $dueEmail->status);
@@ -202,7 +202,7 @@ class ScheduledEmailWorkflowTest extends TestCase
     public function it_can_handle_retry_logic_workflow(): void
     {
         $maxRetries = ScheduledEmail::$maxRetries;
-        
+
         // Create email that will fail multiple times
         $email = ScheduledEmail::create([
             'email_account_id' => $this->emailAccount->id,
@@ -231,7 +231,7 @@ class ScheduledEmailWorkflowTest extends TestCase
 
         // After max retries, email should still be retryable if retry_after is set
         $retryableEmails = ScheduledEmail::retryable(Carbon::now()->addHour())->get();
-        
+
         if ($email->retries < $maxRetries) {
             $this->assertContains($email->id, $retryableEmails->pluck('id'));
         }

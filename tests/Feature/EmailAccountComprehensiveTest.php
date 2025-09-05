@@ -3,17 +3,12 @@
 namespace Turahe\MailClient\Tests\Feature;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\WithFaker;
 use Orchestra\Testbench\Factories\UserFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Turahe\MailClient\Enums\ConnectionType;
-use Turahe\MailClient\Enums\EmailAccountType;
 use Turahe\MailClient\Enums\SyncState;
 use Turahe\MailClient\Models\EmailAccount;
-use Turahe\MailClient\Models\EmailAccountFolder;
-use Turahe\MailClient\Models\EmailAccountMessage;
-use Turahe\MailClient\Models\ScheduledEmail;
 use Turahe\MailClient\Support\EmailAccountFolderCollection;
 use Turahe\MailClient\Tests\Factories\EmailAccountFactory;
 use Turahe\MailClient\Tests\Factories\EmailAccountFolderFactory;
@@ -24,6 +19,7 @@ class EmailAccountComprehensiveTest extends TestCase
     use WithFaker;
 
     protected $user;
+
     protected $emailAccount;
 
     protected function setUp(): void
@@ -41,7 +37,7 @@ class EmailAccountComprehensiveTest extends TestCase
     public function it_can_check_sync_disabled_state(): void
     {
         $this->emailAccount->sync_state = SyncState::Disabled;
-        
+
         $this->assertTrue($this->emailAccount->isSyncDisabled());
         $this->assertFalse($this->emailAccount->isSyncStopped());
     }
@@ -50,7 +46,7 @@ class EmailAccountComprehensiveTest extends TestCase
     public function it_can_check_sync_stopped_state(): void
     {
         $this->emailAccount->sync_state = SyncState::Stopped;
-        
+
         $this->assertTrue($this->emailAccount->isSyncStopped());
         $this->assertFalse($this->emailAccount->isSyncDisabled());
     }
@@ -86,7 +82,7 @@ class EmailAccountComprehensiveTest extends TestCase
             'John Doe'
         );
 
-        $this->assertEquals('John Doe from ' . config('app.name'), $formatted);
+        $this->assertEquals('John Doe from '.config('app.name'), $formatted);
     }
 
     #[Test]
@@ -121,7 +117,7 @@ class EmailAccountComprehensiveTest extends TestCase
     public function it_can_set_sync_state(): void
     {
         $this->emailAccount->setSyncState(SyncState::Disabled, 'Test comment');
-        
+
         $this->assertEquals(SyncState::Disabled, $this->emailAccount->sync_state);
         $this->assertEquals('Test comment', $this->emailAccount->sync_state_comment);
     }
@@ -131,7 +127,7 @@ class EmailAccountComprehensiveTest extends TestCase
     {
         $this->emailAccount->sync_state = SyncState::Disabled;
         $this->emailAccount->enableSync();
-        
+
         $this->assertEquals(SyncState::Enabled, $this->emailAccount->sync_state);
     }
 
@@ -148,7 +144,7 @@ class EmailAccountComprehensiveTest extends TestCase
         ]);
 
         $activeFolders = $this->emailAccount->activeFolders();
-        
+
         $this->assertInstanceOf(EmailAccountFolderCollection::class, $activeFolders);
         $this->assertCount(1, $activeFolders);
         $this->assertTrue($activeFolders->contains($activeFolder));
@@ -163,7 +159,7 @@ class EmailAccountComprehensiveTest extends TestCase
         $stoppedAccount = EmailAccountFactory::new()->forUser($this->user)->create(['sync_state' => SyncState::Stopped]);
 
         $syncableAccounts = EmailAccount::syncable()->get();
-        
+
         $this->assertCount(2, $syncableAccounts); // Including the one from setUp
         $this->assertTrue($syncableAccounts->contains($syncableAccount));
         $this->assertFalse($syncableAccounts->contains($disabledAccount));
@@ -178,7 +174,7 @@ class EmailAccountComprehensiveTest extends TestCase
         ]);
 
         $account = EmailAccount::withFolders()->find($this->emailAccount->id);
-        
+
         $this->assertTrue($account->relationLoaded('folders'));
         $this->assertCount(1, $account->folders);
     }
@@ -311,4 +307,4 @@ class EmailAccountComprehensiveTest extends TestCase
         $this->assertTrue($deleted);
         $this->assertSoftDeleted('email_accounts', ['id' => $email->getKey()]);
     }
-} 
+}

@@ -105,4 +105,4 @@ class ScheduledEmailFactory extends Factory
             'retry_after' => $retryAfter ?: Carbon::now()->addMinutes(30),
         ]);
     }
-} 
+}
